@@ -13,7 +13,7 @@
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
   <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>BSD</license>
+  <license>MIT</license>
 
 
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
@@ -50,8 +50,12 @@
   <build_depend>strands_navigation_msgs</build_depend>
   <build_depend>scitos_ptu</build_depend>
   <build_depend>move_base_msgs</build_depend>
-  <build_depend>previous_positions_service</build_depend>
-  <build_depend>republish_pointcloud_service</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>pcl_ros</build_depend>
+  <build_depend>libpcl-all-dev</build_depend>
   
   <run_depend>actionlib</run_depend>
   <run_depend>actionlib_msgs</run_depend>
@@ -63,11 +67,12 @@
   <run_depend>strands_navigation_msgs</run_depend>
   <run_depend>scitos_ptu</run_depend>
   <run_depend>move_base_msgs</run_depend>
-  <run_depend>previous_positions_service</run_depend>
-  <run_depend>republish_pointcloud_service</run_depend>
-  
-  
-
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>pcl_ros</run_depend>
+  <run_depend>libpcl-all</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
