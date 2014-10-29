@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
-#include "previous_positions_service/PreviousPosition.h"
+#include "backtrack_behaviour/PreviousPosition.h"
 #include <Eigen/Dense>
 
 std::list<geometry_msgs::Pose> poses;
@@ -26,8 +26,8 @@ void callback(const geometry_msgs::Pose::ConstPtr& msg)
     }
 }
 
-bool service_callback(previous_positions_service::PreviousPosition::Request& req,
-                      previous_positions_service::PreviousPosition::Response& res)
+bool service_callback(backtrack_behaviour::PreviousPosition::Request& req,
+                      backtrack_behaviour::PreviousPosition::Response& res)
 {
     Eigen::Vector3d p1(poses.front().position.x, poses.front().position.y, poses.front().position.z);
     Eigen::Vector3d p2;

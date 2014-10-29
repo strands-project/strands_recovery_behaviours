@@ -2,7 +2,7 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <pcl_ros/point_cloud.h>
 #include <pcl/filters/voxel_grid.h>
-#include "republish_pointcloud_service/RepublishPointcloud.h"
+#include "backtrack_behaviour/RepublishPointcloud.h"
 
 ros::Subscriber* sub;
 ros::Publisher* pub;
@@ -33,8 +33,8 @@ void callback(const sensor_msgs::PointCloud2::ConstPtr& input_msg)
     pub->publish(output_msg);
 }
 
-bool service_callback(republish_pointcloud_service::RepublishPointcloud::Request& req,
-                      republish_pointcloud_service::RepublishPointcloud::Response& res)
+bool service_callback(backtrack_behaviour::RepublishPointcloud::Request& req,
+                      backtrack_behaviour::RepublishPointcloud::Response& res)
 {
     if (first && !req.republish) {
         return true;

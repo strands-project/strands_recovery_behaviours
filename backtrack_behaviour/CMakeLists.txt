@@ -5,6 +5,7 @@ project(backtrack_behaviour)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  roscpp
   actionlib
   actionlib_msgs
   rospy
@@ -13,24 +14,30 @@ find_package(catkin REQUIRED COMPONENTS
   dynamic_reconfigure 
   scitos_msgs
   strands_navigation_msgs
-  previous_positions_service
-  republish_pointcloud_service
   scitos_ptu
+  sensor_msgs
+  message_generation
+  message_runtime
+  pcl_ros
+  geometry_msgs
+  dynamic_reconfigure
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
+find_package(PCL REQUIRED)
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
+find_package(Eigen REQUIRED)
+include_directories(${Eigen_INCLUDE_DIRS})
+
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 #catkin_python_setup()
-
-find_package(catkin REQUIRED dynamic_reconfigure)
-#generate_dynamic_reconfigure_options(
-#  cfg/NavFailTresholds.cfg
-#)
-
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -64,11 +71,11 @@ find_package(catkin REQUIRED dynamic_reconfigure)
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+   FILES
+   RepublishPointcloud.srv
+   PreviousPosition.srv
+)
 
 ## Generate actions in the 'action' folder
 add_action_files(
@@ -81,6 +88,7 @@ generate_messages(
   DEPENDENCIES
   std_msgs
   actionlib_msgs
+  geometry_msgs
 )
 
 ###################################
@@ -96,6 +104,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES monitored_navigation
 #  CATKIN_DEPENDS actionlib actionlib_msgs dynamic_reconfigure rospy smach smach_ros std_msgs std_srvs
+   CATKIN_DEPENDS roscpp geometry_msgs
 #  DEPENDS system_lib
 )
 
@@ -116,16 +125,21 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-# add_executable(monitored_navigation_node src/monitored_navigation_node.cpp)
+add_executable(republish_pointcloud src/republish_pointcloud.cpp)
+add_executable(previous_positions src/previous_positions.cpp)
 
 ## Add cmake target dependencies of the executable/library
-## as an example, message headers may need to be generated before nodes
-# add_dependencies(monitored_navigation_node monitored_navigation_generate_messages_cpp)
+add_dependencies(republish_pointcloud backtrack_behaviour_generate_messages_cpp)
+add_dependencies(previous_positions backtrack_behaviour_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(monitored_navigation_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(republish_pointcloud
+  ${catkin_LIBRARIES} ${PCL_LIBRARIES}
+)
+
+target_link_libraries(previous_positions
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
@@ -142,18 +156,21 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS monitored_navigation monitored_navigation_node
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(TARGETS republish_pointcloud previous_positions
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+install(DIRECTORY launch
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(DIRECTORY scripts/
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  USE_SOURCE_PERMISSIONS
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
