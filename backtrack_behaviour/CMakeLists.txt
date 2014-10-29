@@ -5,6 +5,7 @@ project(backtrack_behaviour)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  roscpp
   actionlib
   actionlib_msgs
   rospy
@@ -14,11 +15,12 @@ find_package(catkin REQUIRED COMPONENTS
   scitos_msgs
   strands_navigation_msgs
   scitos_ptu
-  roscpp
   sensor_msgs
   message_generation
+  message_runtime
   pcl_ros
   geometry_msgs
+  dynamic_reconfigure
 )
 
 ## System dependencies are found with CMake's conventions
@@ -29,16 +31,13 @@ include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
+find_package(Eigen REQUIRED)
+include_directories(${Eigen_INCLUDE_DIRS})
+
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 #catkin_python_setup()
-
-find_package(catkin REQUIRED dynamic_reconfigure)
-#generate_dynamic_reconfigure_options(
-#  cfg/NavFailTresholds.cfg
-#)
-
 
 ################################################
 ## Declare ROS messages, services and actions ##
