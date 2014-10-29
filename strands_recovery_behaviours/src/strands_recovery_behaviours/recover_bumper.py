@@ -6,7 +6,7 @@ from scitos_msgs.srv import EnableMotors
 from monitored_navigation.recover_state_machine import RecoverStateMachine
 
 from std_srvs.srv import Empty
-from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
+from human_help_manager.srv import AskHelp, AskHelpRequest
 
 from mongo_logger import MonitoredNavEventClass
 

@@ -7,7 +7,7 @@ from monitored_navigation.recover_state_machine import RecoverStateMachine
 
 from recover_nav_backtrack import RecoverNavBacktrack
 
-from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
+from human_help_manager.srv import AskHelp, AskHelpRequest
 
 from mongo_logger import MonitoredNavEventClass
 

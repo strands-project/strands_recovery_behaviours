@@ -1,10 +1,7 @@
 #! /usr/bin/env python
 
 import rospy
-
-
-from strands_navigation_msgs.srv import AskHelp
-from strands_navigation_msgs.srv import Register
+from human_help_manager.srv import AskHelp, Register
     
 class HelpManager(object):
 
