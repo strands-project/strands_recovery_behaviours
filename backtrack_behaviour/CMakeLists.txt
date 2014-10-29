@@ -169,6 +169,7 @@ install(DIRECTORY launch
 
 install(DIRECTORY scripts/
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  USE_SOURCE_PERMISSIONS
 )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
