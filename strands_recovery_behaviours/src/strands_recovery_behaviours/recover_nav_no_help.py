@@ -5,9 +5,6 @@ import smach
 from monitored_navigation.recover_state_machine import RecoverStateMachine
 from recover_nav_backtrack import RecoverNavBacktrack
 
-from mongo_logger import MonitoredNavEventClass
-
-
 
 class RecoverNavNoHelp(RecoverStateMachine):
     def __init__(self):
@@ -24,5 +21,4 @@ class RecoverNavNoHelp(RecoverStateMachine):
                                                 'preempted':'preempted'})
         
 
-    #def start_cb(self,userdata,active_states):
-        #self.userdata.n_nav_fails=self.userdata.n_nav_fails+1
+    

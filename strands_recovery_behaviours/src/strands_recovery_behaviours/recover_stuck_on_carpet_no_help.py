@@ -52,10 +52,7 @@ class CarpetState(smach.State):
         
         self.nav_stat.finalize(False,0)
         self.nav_stat.insert()
-        
-        
-        
-   
+
         #TODO: find way to check if behaviour was successful       
         if True:     
             return 'recovered_without_help'
