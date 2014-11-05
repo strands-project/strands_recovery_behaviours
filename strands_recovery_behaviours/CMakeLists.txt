@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   smach_ros
   std_msgs
   std_srvs
-  dynamic_reconfigure 
   scitos_msgs
   human_help_manager
   move_base_msgs
@@ -33,10 +32,10 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_python_setup()
 
 
-find_package(catkin REQUIRED dynamic_reconfigure)
-generate_dynamic_reconfigure_options(
-  cfg/NavFailTresholds.cfg
-)
+# find_package(catkin REQUIRED dynamic_reconfigure)
+# generate_dynamic_reconfigure_options(
+#   cfg/NavFailTresholds.cfg
+# )
 
 
 ################################################
