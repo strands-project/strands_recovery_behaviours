@@ -1,27 +1,15 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(strands_recovery_behaviours)
+project(nav_help_screen)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  actionlib
-  actionlib_msgs
   rospy
-  smach
-  smach_ros
-  std_msgs
-  std_srvs
-  dynamic_reconfigure 
-  scitos_msgs
+  twitter_bootstrap
+  strands_webtools
   human_help_manager
-  move_base_msgs
-  sensor_msgs
 )
-
-
-
-
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -31,13 +19,6 @@ find_package(catkin REQUIRED COMPONENTS
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 catkin_python_setup()
-
-
-find_package(catkin REQUIRED dynamic_reconfigure)
-generate_dynamic_reconfigure_options(
-  cfg/NavFailTresholds.cfg
-)
-
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -71,10 +52,11 @@ generate_dynamic_reconfigure_options(
 # )
 
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  PauseResumeNav.srv
-)
+# add_service_files(
+#   FILES
+#   Service1.srv
+#   Service2.srv
+# )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -84,10 +66,10 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-)
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs  # Or other packages containing msgs
+# )
 
 ###################################
 ## catkin specific configuration ##
@@ -100,8 +82,8 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES monitored_navigation
-#  CATKIN_DEPENDS actionlib actionlib_msgs dynamic_reconfigure rospy smach smach_ros std_msgs std_srvs
+#  LIBRARIES marathon_touch_gui
+#  CATKIN_DEPENDS twitter_bootstrap strands_webtools
 #  DEPENDS system_lib
 )
 
@@ -117,19 +99,19 @@ include_directories(
 )
 
 ## Declare a cpp library
-# add_library(monitored_navigation
-#   src/${PROJECT_NAME}/monitored_navigation.cpp
+# add_library(marathon_touch_gui
+#   src/${PROJECT_NAME}/marathon_touch_gui.cpp
 # )
 
 ## Declare a cpp executable
-# add_executable(monitored_navigation_node src/monitored_navigation_node.cpp)
+# add_executable(marathon_touch_gui_node src/marathon_touch_gui_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(monitored_navigation_node monitored_navigation_generate_messages_cpp)
+# add_dependencies(marathon_touch_gui_node marathon_touch_gui_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(monitored_navigation_node
+# target_link_libraries(marathon_touch_gui_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -140,15 +122,14 @@ include_directories(
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
-## Mark executable scripts (Python etc.) for installation
-## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+# Mark executable scripts (Python etc.) for installation
+# in contrast to setup.py, you can choose the destination
+install(DIRECTORY scripts/
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+        USE_SOURCE_PERMISSIONS)
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS monitored_navigation monitored_navigation_node
+# install(TARGETS marathon_touch_gui marathon_touch_gui_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -168,16 +149,12 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
-install(PROGRAMS scripts/monitored_nav.py
-         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
 #############
 ## Testing ##
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_monitored_navigation.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_marathon_touch_gui.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

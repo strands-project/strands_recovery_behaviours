@@ -1,25 +1,25 @@
 <?xml version="1.0"?>
 <package>
-  <name>strands_recovery_behaviours</name>
-  <version>0.0.0</version>
-  <description>The strands_recovery_behaviours package</description>
+  <name>nav_help_speech</name>
+  <version>0.0.1</version>
+  <description>The nav_help_speech package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="b.lacerda@cs.bham.ac.uk">Bruno Lacerda</maintainer>
+  <maintainer email="b.lacerda@cs.bham.ac.uk">bruno</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
   <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>TODO</license>
+  <license>MIT</license>
 
 
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/monitored_navigation</url> -->
+  <!-- <url type="website">http://wiki.ros.org/nav_help_speech</url> -->
 
 
   <!-- Author tags are optional, mutiple are allowed, one per tag -->
@@ -40,35 +40,14 @@
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>actionlib</build_depend>
-  <build_depend>actionlib_msgs</build_depend>
-  <build_depend>dynamic_reconfigure</build_depend>
+  <build_depend>mary_tts</build_depend>
   <build_depend>rospy</build_depend>
-  <build_depend>smach</build_depend>
-  <build_depend>smach_ros</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_depend>std_srvs</build_depend>
-  <build_depend>scitos_msgs</build_depend>
-  <build_depend>human_help_manager</build_depend>
-  <build_depend>move_base_msgs</build_depend>
-  <build_depend>sensor_msgs</build_depend>
-
-  
-  <run_depend>actionlib</run_depend>
-  <run_depend>actionlib_msgs</run_depend>
-  <run_depend>dynamic_reconfigure</run_depend>
+  <build_depend>actionlib</build_depend> 
+  <build_depend>human_help_manager</build_depend>    
+  <run_depend>mary_tts</run_depend>
   <run_depend>rospy</run_depend>
-  <run_depend>smach</run_depend>
-  <run_depend>smach_ros</run_depend>
-  <run_depend>std_msgs</run_depend>
-  <run_depend>std_srvs</run_depend>
-  <run_depend>scitos_msgs</run_depend>
-  <run_depend>human_help_manager</run_depend>
-  <run_depend>move_base_msgs</run_depend>
-  <run_depend>sensor_msgs</run_depend>
-
-  
-  
+  <run_depend>actionlib</run_depend>
+  <run_depend>human_help_manager</run_depend>    
 
 
   <!-- The export tag contains other, unspecified, tags -->
