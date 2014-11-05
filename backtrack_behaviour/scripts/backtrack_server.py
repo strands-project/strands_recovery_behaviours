@@ -15,14 +15,13 @@ from nav_msgs.msg import Path
 from move_base_msgs.msg import *
 import dynamic_reconfigure.client
 from scitos_ptu.msg import *
-from previous_positions_service.srv import PreviousPosition
-from republish_pointcloud_service.srv import RepublishPointcloud
+from backtrack_behaviour.srv import PreviousPosition
+from backtrack_behaviour.srv import RepublishPointcloud
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose
 
 import actionlib
 
-from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
 from backtrack_behaviour.msg import BacktrackAction, BacktrackResult, BacktrackFeedback
 
 #from logger import Loggable
