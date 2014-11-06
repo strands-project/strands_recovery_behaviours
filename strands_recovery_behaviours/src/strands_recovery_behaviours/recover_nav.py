@@ -96,14 +96,11 @@ class RecoverNavHelp(smach.State):
         self.nav_stat.initialize(recovery_mechanism="nav_help_recovery")
             
         if self.preempt_requested(): 
-            self.service_preempt()
+            self.service_preempt(userdata.n_nav_fails)
             return 'preempted'
 
         if userdata.n_nav_fails < max_nav_recovery_attempts:
-            if self.preempt_requested():  
-                self.service_preempt(userdata.n_nav_fails)
-                return 'preempted'
-                
+   
             self.service_msg.interaction_status=AskHelpRequest.ASKING_HELP
             self.service_msg.interaction_service=self.help_offered_service_name
             self.ask_help()
