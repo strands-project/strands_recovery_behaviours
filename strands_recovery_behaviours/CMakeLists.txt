@@ -5,17 +5,19 @@ project(strands_recovery_behaviours)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  rospy
+  monitored_navigation
+  strands_navigation_msgs
   actionlib
   actionlib_msgs
-  rospy
   smach
   smach_ros
   std_msgs
   std_srvs
   scitos_msgs
-  human_help_manager
   move_base_msgs
   sensor_msgs
+  backtrack_behaviour
 )
 
 
