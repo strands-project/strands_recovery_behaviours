@@ -22,6 +22,8 @@ class HelpSpeech(UIHelper):
         self.help_failed_speech='Something is still wrong. Are you sure I am in a clear area?'
         self.help_finished_speech='Thank you! I will be on my way.'
         
+        self.was_helped=False
+        
         UIHelper.__init__(self)
  
 
@@ -32,10 +34,13 @@ class HelpSpeech(UIHelper):
             self.call_speech(self.bumper_help_speech)
         
     def being_helped(self, failed_component, interaction_service, n_fails):
+        self.was_helped=True
         return
         
     def help_finished(self, failed_component, interaction_service, n_fails):
-        self.call_speech(self.help_finished_speech)
+        if self.was_helped:
+            self.call_speech(self.help_finished_speech)
+        self.was_helped=False
         
     def help_failed(self, failed_component, interaction_service, n_fails):
         self.call_speech(self.help_failed)
