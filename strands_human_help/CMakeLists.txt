@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(nav_help_speech)
+project(strands_human_help)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  mary_tts
-  rospy
-  actionlib
-  human_help_manager
-)
+                                rospy
+                                monitored_navigation
+                                strands_webserver
+                                actionlib
+                                mary_tts)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -18,7 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
+catkin_python_setup()
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -54,8 +54,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate services in the 'srv' folder
 # add_service_files(
 #   FILES
-#   Service1.srv
-#   Service2.srv
+#   AskHelp.srv
 # )
 
 ## Generate actions in the 'action' folder
@@ -68,7 +67,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
+#   std_msgs
 # )
 
 ###################################
@@ -82,8 +81,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES nav_help_speech
-#  CATKIN_DEPENDS mary_tts rospy
+#  LIBRARIES strands_human_help
+#  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
 
@@ -99,19 +98,19 @@ include_directories(
 )
 
 ## Declare a cpp library
-# add_library(nav_help_speech
-#   src/${PROJECT_NAME}/nav_help_speech.cpp
+# add_library(strands_human_help
+#   src/${PROJECT_NAME}/strands_human_help.cpp
 # )
 
 ## Declare a cpp executable
-# add_executable(nav_help_speech_node src/nav_help_speech_node.cpp)
+# add_executable(strands_human_help_node src/strands_human_help_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(nav_help_speech_node nav_help_speech_generate_messages_cpp)
+# add_dependencies(strands_human_help_node strands_human_help_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(nav_help_speech_node
+# target_link_libraries(strands_human_help_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -124,13 +123,18 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#  install(PROGRAMS
+#    scripts/help_manager.py
+#    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#  )
+
+
+# install(DIRECTORY launch/
+#    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS nav_help_speech nav_help_speech_node
+# install(TARGETS strands_human_help strands_human_help_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -155,7 +159,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_nav_help_speech.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_strands_human_help.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
