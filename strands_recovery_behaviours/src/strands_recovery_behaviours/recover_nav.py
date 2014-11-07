@@ -7,7 +7,7 @@ from monitored_navigation.recover_state_machine import RecoverStateMachine
 
 from recover_nav_backtrack import RecoverNavBacktrack
 
-from human_help_manager.srv import AskHelp, AskHelpRequest
+from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
 
 from mongo_logger import MonitoredNavEventClass
 
@@ -101,6 +101,7 @@ class RecoverNavHelp(smach.State):
 
         if userdata.n_nav_fails < max_nav_recovery_attempts:
    
+            self.service_msg.n_fails=userdata.n_nav_fails
             self.service_msg.interaction_status=AskHelpRequest.ASKING_HELP
             self.service_msg.interaction_service=self.help_offered_service_name
             self.ask_help()

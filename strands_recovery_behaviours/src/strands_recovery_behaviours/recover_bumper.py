@@ -6,7 +6,7 @@ from scitos_msgs.srv import EnableMotors
 from monitored_navigation.recover_state_machine import RecoverStateMachine
 
 from std_srvs.srv import Empty
-from human_help_manager.srv import AskHelp, AskHelpRequest
+from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
 
 from mongo_logger import MonitoredNavEventClass
 
@@ -96,7 +96,8 @@ class BumperHelp(smach.State):
         if self.preempt_requested(): 
             self.service_preempt()
             return 'preempted'
-            
+        
+        self.service_msg.n_tries=self.n_tries
         if userdata.recovered:
             self.service_msg.interaction_status=AskHelpRequest.HELP_FINISHED
             self.service_msg.interaction_service='none'
