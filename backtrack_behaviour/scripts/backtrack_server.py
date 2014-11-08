@@ -35,7 +35,14 @@ class BacktrackServer(object):
         rospy.init_node('backtrack_actionserver')
 
         self.ptu_action_client = actionlib.SimpleActionClient('/SetPTUState', PtuGotoAction)
+        rospy.loginfo("Waiting for ptu action...") 
+        self.ptu_action_client.wait_for_server()
+        rospy.loginfo("Done") 
+        
         self.move_base_action_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
+        rospy.loginfo("Waiting for  move_base action...") 
+        self.move_base_action_client.wait_for_server()
+        rospy.loginfo("Done") 
         self.move_base_reconfig_client = dynamic_reconfigure.client.Client('/move_base/DWAPlannerROS')
         
         self.global_plan = None
@@ -47,6 +54,7 @@ class BacktrackServer(object):
         
         self.server = actionlib.SimpleActionServer('do_backtrack', BacktrackAction, self.execute, False)
         self.server.start()
+        rospy.loginfo("/do_backtrack action server started") 
         
     def global_planner_checker_cb(self, msg):
         self.global_plan = msg

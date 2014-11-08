@@ -6,7 +6,7 @@ from scitos_msgs.srv import EnableMotors
 from monitored_navigation.recover_state_machine import RecoverStateMachine
 
 from std_srvs.srv import Empty
-from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
+from human_help_manager.srv import AskHelp, AskHelpRequest
 
 from mongo_logger import MonitoredNavEventClass
 
@@ -33,12 +33,16 @@ class RecoverBumper(RecoverStateMachine):
  
 
 class BumperHelp(smach.State):
-    def __init__(self,max_bumper_recovery_attempts=5):
+    def __init__(self,max_bumper_recovery_attempts=5, wait_for_bumper_help_timeout=40, wait_for_bumper_help_finished=60):
             smach.State.__init__(self,
                                 outcomes=['recovered_without_help', 'not_recovered_without_help', 'preempted', "try_restart"],
                                 input_keys=[ 'recovered']
                                 )
-            self.set_nav_thresholds(max_bumper_recovery_attempts)
+                                
+            rospy.set_param('max_bumper_recovery_attempts', max_bumper_recovery_attempts)
+            rospy.set_param('wait_for_bumper_help_timeout', wait_for_bumper_help_timeout)
+            rospy.set_param('wait_for_bumper_help_finished', wait_for_bumper_help_finished)
+            
             self.n_tries=0
             self.nav_stat=None
             
@@ -81,6 +85,10 @@ class BumperHelp(smach.State):
 
     def execute(self, userdata):
         
+        max_bumper_recovery_attempts=rospy.get_param('max_bumper_recovery_attempts',5)
+        wait_for_bumper_help_timeout=rospy.get_param('wait_for_bumper_help_timeout',40)
+        wait_for_bumper_help_finished=rospy.get_param('wait_for_bumper_help_finished',60)
+        
         if self.n_tries==0:
             self.nav_stat=MonitoredNavEventClass()
             self.nav_stat.initialize(recovery_mechanism="bumper_recovery")
@@ -99,7 +107,7 @@ class BumperHelp(smach.State):
             else:
                 self.finish_execution()
                 return "recovered_without_help"
-        elif self.n_tries>self.MAX_BUMPER_RECOVERY_ATTEMPTS:
+        elif self.n_tries>max_bumper_recovery_attempts:
             self.service_msg.interaction_status=AskHelpRequest.HELP_FAILED
             self.service_msg.interaction_service='none'
             self.ask_help()
@@ -118,7 +126,7 @@ class BumperHelp(smach.State):
                 self.service_msg.interaction_status=AskHelpRequest.ASKING_HELP
                 self.service_msg.interaction_service=self.help_offered_service_name
                 self.ask_help()
-            for i in range(0,4*self.n_tries):    
+            for i in range(0,wait_for_bumper_help_timeout):    
                 if self.being_helped:
                     break
                 if self.preempt_requested():
@@ -129,7 +137,7 @@ class BumperHelp(smach.State):
                 self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED
                 self.service_msg.interaction_service=self.help_finished_service_name
                 self.ask_help()
-                for i in range(0,60):
+                for i in range(0,wait_for_bumper_help_finished):
                     self.enable_motors(False)
                     if self.help_finished:
                         break
@@ -155,6 +163,3 @@ class BumperHelp(smach.State):
         smach.State.service_preempt(self)
 
 
-    def set_nav_thresholds(self, max_bumper_recovery_attempts):
-        if max_bumper_recovery_attempts is not None:
-            self.MAX_BUMPER_RECOVERY_ATTEMPTS = max_bumper_recovery_attempts

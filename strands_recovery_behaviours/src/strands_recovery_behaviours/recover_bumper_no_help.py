@@ -36,11 +36,14 @@ class BumperOutput(smach.State):
                                 outcomes=['recovered_without_help', 'not_recovered_without_help', 'preempted', "try_restart"],
                                 input_keys=['recovered']
                                 )
-            self.set_nav_thresholds(max_bumper_recovery_attempts)
+                                
+            rospy.set_param('max_bumper_recovery_attempts', max_bumper_recovery_attempts)
             self.n_tries=0
             self.nav_stat=None
 
     def execute(self, userdata):
+        
+        max_bumper_recovery_attempts=rospy.get_param('max_bumper_recovery_attempts',5)
         
         if self.n_tries==0:
             self.nav_stat=MonitoredNavEventClass()
@@ -55,7 +58,7 @@ class BumperOutput(smach.State):
         if userdata.recovered:
             self.finish_execution()
             return "recovered_without_help"
-        elif self.n_tries>self.MAX_BUMPER_RECOVERY_ATTEMPTS:
+        elif self.n_tries>max_bumper_recovery_attempts:
             self.finish_execution()
             return "not_recovered_without_help"
         else:
@@ -72,12 +75,3 @@ class BumperOutput(smach.State):
         self.finish_execution()
         smach.State.service_preempt(self)
         
-
-
-
-    def set_nav_thresholds(self, max_bumper_recovery_attempts):
-        if max_bumper_recovery_attempts is not None:
-            self.MAX_BUMPER_RECOVERY_ATTEMPTS = max_bumper_recovery_attempts
-                            
-                
- 

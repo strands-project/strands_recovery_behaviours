@@ -7,7 +7,7 @@ from monitored_navigation.recover_state_machine import RecoverStateMachine
 
 from recover_nav_backtrack import RecoverNavBacktrack
 
-from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
+from human_help_manager.srv import AskHelp, AskHelpRequest
 
 from mongo_logger import MonitoredNavEventClass
 
@@ -36,7 +36,7 @@ class RecoverNav(RecoverStateMachine):
 
 
 class RecoverNavHelp(smach.State):
-    def __init__(self,max_nav_recovery_attempts=5):
+    def __init__(self,max_nav_recovery_attempts=5, wait_for_nav_help_timeout=40, wait_for_nav_help_finished=60):
         smach.State.__init__(self,
                              # we need the number of move_base fails as
                              # incoming data from the move_base action state,
@@ -47,7 +47,9 @@ class RecoverNavHelp(smach.State):
                              output_keys=['goal','n_nav_fails'],
                              )
 
-        self.set_nav_thresholds(max_nav_recovery_attempts)
+        rospy.set_param('max_nav_recovery_attempts', max_nav_recovery_attempts)
+        rospy.set_param('wait_for_nav_help_timeout', wait_for_nav_help_timeout)
+        rospy.set_param('wait_for_nav_help_finished', wait_for_nav_help_finished)
         self.nav_stat=None
             
         self.enable_motors= rospy.ServiceProxy('enable_motors', EnableMotors)
@@ -84,6 +86,12 @@ class RecoverNavHelp(smach.State):
 
 
     def execute(self, userdata):
+        
+        max_nav_recovery_attempts=rospy.get_param('max_nav_recovery_attempts',5)
+        wait_for_nav_help_timeout=rospy.get_param('wait_for_nav_help_timeout',40)
+        wait_for_nav_help_finished=rospy.get_param('wait_for_nav_help_finished',60)
+        
+        
         self.nav_stat=MonitoredNavEventClass()
         self.nav_stat.initialize(recovery_mechanism="nav_help_recovery")
             
@@ -91,7 +99,7 @@ class RecoverNavHelp(smach.State):
             self.service_preempt()
             return 'preempted'
 
-        if userdata.n_nav_fails < self.MAX_NAV_RECOVERY_ATTEMPTS:
+        if userdata.n_nav_fails < max_nav_recovery_attempts:
             if self.preempt_requested():  
                 self.service_preempt(userdata.n_nav_fails)
                 return 'preempted'
@@ -100,7 +108,7 @@ class RecoverNavHelp(smach.State):
             self.service_msg.interaction_service=self.help_offered_service_name
             self.ask_help()
 
-            for i in range(0,40):
+            for i in range(0,wait_for_nav_help_timeout):
                 if self.preempt_requested():
                     self.service_preempt(userdata.n_nav_fails)
                     return 'preempted'
@@ -111,7 +119,7 @@ class RecoverNavHelp(smach.State):
                 self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED
                 self.service_msg.interaction_service=self.help_finished_service_name
                 self.ask_help()
-                for i in range(0,60):
+                for i in range(0,wait_for_nav_help_finished):
                     self.enable_motors(False) 
                     if self.help_finished:
                         break
@@ -152,12 +160,5 @@ class RecoverNavHelp(smach.State):
         self.finish_execution(n_tries)
         smach.State.service_preempt(self)
             
-            
-    def set_nav_thresholds(self, max_nav_recovery_attempts):
-        if max_nav_recovery_attempts is not None:
-            self.MAX_NAV_RECOVERY_ATTEMPTS = max_nav_recovery_attempts        
-            
-    
 
-        
  

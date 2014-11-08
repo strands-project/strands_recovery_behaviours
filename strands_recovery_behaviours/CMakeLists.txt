@@ -12,10 +12,10 @@ find_package(catkin REQUIRED COMPONENTS
   smach_ros
   std_msgs
   std_srvs
-  dynamic_reconfigure 
   scitos_msgs
-  strands_navigation_msgs
+  human_help_manager
   move_base_msgs
+  sensor_msgs
 )
 
 
@@ -32,10 +32,10 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_python_setup()
 
 
-find_package(catkin REQUIRED dynamic_reconfigure)
-generate_dynamic_reconfigure_options(
-  cfg/NavFailTresholds.cfg
-)
+# find_package(catkin REQUIRED dynamic_reconfigure)
+# generate_dynamic_reconfigure_options(
+#   cfg/NavFailTresholds.cfg
+# )
 
 
 ################################################
@@ -70,11 +70,10 @@ generate_dynamic_reconfigure_options(
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  PauseResumeNav.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -84,10 +83,10 @@ generate_dynamic_reconfigure_options(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   actionlib_msgs#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -168,9 +167,9 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
-install(PROGRAMS scripts/monitored_nav.py
-         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+# install(PROGRAMS scripts/monitored_nav.py
+#          DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# )
 
 #############
 ## Testing ##
