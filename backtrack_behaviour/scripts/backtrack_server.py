@@ -64,7 +64,7 @@ class BacktrackServer(object):
     def start_republish(self):
         try:
             republish_pointcloud = rospy.ServiceProxy('republish_pointcloud', RepublishPointcloud)
-            republish_pointcloud(True, '/head_xtion/depth/points', '/move_base/head_subsampled', 0.05)
+            republish_pointcloud(True, '/head_xtion/depth/points', '/move_base/head_points_clearing', 0.05)
         except rospy.ServiceException, e:
             rospy.logwarn("Couldn't get republish pointcloud service, returning failure.")
             return False
