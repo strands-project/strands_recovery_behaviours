@@ -2,8 +2,8 @@
 Changelog for package strands_recovery_behaviours
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.2 (2014-11-10)
+------------------
 * Removing monitored_navigation as required component.
   Not needed for a pseudo metapackage and breaks the build.
 * Contributors: Christian Dondrup
