@@ -2,8 +2,8 @@
 Changelog for package strands_recovery_behaviours
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.1 (2014-11-10)
+------------------
 * moving mon nav config and launch files here
 * renaming smach recoveries package
 * fixing imports + sending number of fails when asking for help

@@ -2,8 +2,8 @@
 Changelog for package backtrack_behaviour
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.1 (2014-11-10)
+------------------
 * Merge remote-tracking branch 'upstream/hydro-devel' into hydro-devel
 * Changed to the correct topic
 * backtrack server now waits for SetPTUState and move_base
