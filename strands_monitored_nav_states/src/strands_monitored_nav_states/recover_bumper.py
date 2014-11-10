@@ -6,7 +6,7 @@ from scitos_msgs.srv import EnableMotors
 from monitored_navigation.recover_state_machine import RecoverStateMachine
 
 from std_srvs.srv import Empty
-from human_help_manager.srv import AskHelp, AskHelpRequest
+from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
 
 from mongo_logger import MonitoredNavEventClass
 
@@ -52,9 +52,9 @@ class BumperHelp(smach.State):
             self.being_helped = False
             self.help_finished=False
             
-            self.ask_help_srv=rospy.ServiceProxy('/monitored_navigation/human_help/manager', AskHelp)
+            self.ask_help_srv=rospy.ServiceProxy('/monitored_navigation/human_help/', AskHelp)
             self.service_msg=AskHelpRequest()
-            self.service_msg.failed_component=AskHelpRequest.BUMPER
+            self.service_msg.failed_component='bumper'
             
             
             self.help_offered_service_name='bumper_help_offered'
@@ -96,7 +96,8 @@ class BumperHelp(smach.State):
         if self.preempt_requested(): 
             self.service_preempt()
             return 'preempted'
-            
+        
+        self.service_msg.n_tries=self.n_tries
         if userdata.recovered:
             self.service_msg.interaction_status=AskHelpRequest.HELP_FINISHED
             self.service_msg.interaction_service='none'

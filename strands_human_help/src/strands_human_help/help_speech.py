@@ -1,0 +1,53 @@
+#! /usr/bin/env python
+
+import rospy
+
+from monitored_navigation.ui_helper import UIHelper
+
+import actionlib
+from mary_tts.msg import maryttsAction, maryttsGoal
+
+    
+class HelpSpeech(UIHelper):
+
+    def __init__(self):
+
+        self.speaker=actionlib.SimpleActionClient('/speak', maryttsAction)
+        rospy.loginfo("Waiting for marytts action...") 
+        self.speaker.wait_for_server()
+        rospy.loginfo("Done") 
+        
+        self.nav_help_speech='I am having problems moving. Please push me to a clear area.'
+        self.bumper_help_speech='My bumper is being pressed. Please release it so I can move on!'
+        self.help_failed_speech='Something is still wrong. Are you sure I am in a clear area?'
+        self.help_finished_speech='Thank you! I will be on my way.'
+        
+        self.was_helped=False
+        
+        UIHelper.__init__(self)
+ 
+
+    def ask_help(self, failed_component, interaction_service, n_fails):
+        if failed_component=='navigation':
+            self.call_speech(self.nav_help_speech)
+        elif failed_component=='bumper':
+            self.call_speech(self.bumper_help_speech)
+        
+    def being_helped(self, failed_component, interaction_service, n_fails):
+        self.was_helped=True
+        return
+        
+    def help_finished(self, failed_component, interaction_service, n_fails):
+        if self.was_helped:
+            self.call_speech(self.help_finished_speech)
+        self.was_helped=False
+        
+    def help_failed(self, failed_component, interaction_service, n_fails):
+        self.call_speech(self.help_failed)
+    
+   
+    def call_speech(self, text):
+        self.speaker.send_goal(maryttsGoal(text=text))
+        self.speaker.wait_for_result()
+ 
+  

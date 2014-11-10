@@ -1,5 +1,0 @@
-<launch>
-    <node name="human_help_manager" pkg="human_help_manager" type="help_manager.py" output="screen"/>
-    <node name="nav_help_screen" pkg="nav_help_screen" type="help_screen.py" output="screen"/>   
-    <node name="nav_help_speech" pkg="nav_help_speech" type="help_speech.py" output="screen"/>   
-</launch>

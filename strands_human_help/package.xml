@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package>
-  <name>human_help_manager</name>
+  <name>strands_human_help</name>
   <version>0.0.0</version>
-  <description>The human_help_manager package</description>
+  <description>The strands_human_help package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="b.lacerda@cs.bham.ac.uk">Bruno Lacerda</maintainer>
+  <maintainer email="b.lacerda@cs.bham.ac.uk">bruno</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/human_help_manager</url> -->
+  <!-- <url type="website">http://wiki.ros.org/strands_human_help</url> -->
 
 
   <!-- Author tags are optional, mutiple are allowed, one per tag -->
@@ -40,13 +40,18 @@
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
+  
   <build_depend>rospy</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_depend>message_generation</build_depend>
-  <run_depend>rospy</run_depend>
-  <run_depend>std_msgs</run_depend>
-  <run_depend>message_runtime</run_depend>
+  <build_depend>monitored_navigation</build_depend>
+  <build_depend>strands_webserver</build_depend>
+  <build_depend>actionlib</build_depend> 
+  <build_depend>mary_tts</build_depend>
 
+  <run_depend>rospy</run_depend>
+  <run_depend>monitored_navigation</run_depend>
+  <run_depend>strands_webserver</run_depend>
+  <run_depend>actionlib</run_depend>
+  <run_depend>mary_tts</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

@@ -7,7 +7,7 @@ from monitored_navigation.recover_state_machine import RecoverStateMachine
 
 from recover_nav_backtrack import RecoverNavBacktrack
 
-from human_help_manager.srv import AskHelp, AskHelpRequest
+from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
 
 from mongo_logger import MonitoredNavEventClass
 
@@ -59,7 +59,7 @@ class RecoverNavHelp(smach.State):
             
         self.ask_help_srv=rospy.ServiceProxy('/monitored_navigation/human_help/manager', AskHelp)
         self.service_msg=AskHelpRequest()
-        self.service_msg.failed_component=AskHelpRequest.NAVIGATION
+        self.service_msg.failed_component='navigation'
             
         self.help_offered_service_name='nav_help_offered'
         self.help_offered_monitor=rospy.Service('/monitored_navigation/'+self.help_offered_service_name, Empty, self.help_offered_cb)
@@ -96,14 +96,12 @@ class RecoverNavHelp(smach.State):
         self.nav_stat.initialize(recovery_mechanism="nav_help_recovery")
             
         if self.preempt_requested(): 
-            self.service_preempt()
+            self.service_preempt(userdata.n_nav_fails)
             return 'preempted'
 
         if userdata.n_nav_fails < max_nav_recovery_attempts:
-            if self.preempt_requested():  
-                self.service_preempt(userdata.n_nav_fails)
-                return 'preempted'
-                
+   
+            self.service_msg.n_fails=userdata.n_nav_fails
             self.service_msg.interaction_status=AskHelpRequest.ASKING_HELP
             self.service_msg.interaction_service=self.help_offered_service_name
             self.ask_help()

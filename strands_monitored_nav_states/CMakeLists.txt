@@ -1,14 +1,28 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(human_help_manager)
+project(strands_monitored_nav_states)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   rospy
+  monitored_navigation
+  strands_navigation_msgs
+  actionlib
+  actionlib_msgs
+  smach
+  smach_ros
   std_msgs
-  message_generation
+  std_srvs
+  scitos_msgs
+  move_base_msgs
+  sensor_msgs
+  backtrack_behaviour
 )
+
+
+
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -17,7 +31,14 @@ find_package(catkin REQUIRED COMPONENTS
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
+catkin_python_setup()
+
+
+# find_package(catkin REQUIRED dynamic_reconfigure)
+# generate_dynamic_reconfigure_options(
+#   cfg/NavFailTresholds.cfg
+# )
+
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -53,8 +74,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
-  AskHelp.srv
-  Register.srv
+  PauseResumeNav.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -64,7 +84,7 @@ add_service_files(
 #   Action2.action
 # )
 
-# Generate added messages and services with any dependencies listed here
+## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
   std_msgs
@@ -81,8 +101,8 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES human_help_manager
-#  CATKIN_DEPENDS rospy strands_navigation_msgs
+#  LIBRARIES monitored_navigation
+#  CATKIN_DEPENDS actionlib actionlib_msgs dynamic_reconfigure rospy smach smach_ros std_msgs std_srvs
 #  DEPENDS system_lib
 )
 
@@ -98,19 +118,19 @@ include_directories(
 )
 
 ## Declare a cpp library
-# add_library(human_help_manager
-#   src/${PROJECT_NAME}/human_help_manager.cpp
+# add_library(monitored_navigation
+#   src/${PROJECT_NAME}/monitored_navigation.cpp
 # )
 
 ## Declare a cpp executable
-# add_executable(human_help_manager_node src/human_help_manager_node.cpp)
+# add_executable(monitored_navigation_node src/monitored_navigation_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(human_help_manager_node human_help_manager_generate_messages_cpp)
+# add_dependencies(monitored_navigation_node monitored_navigation_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(human_help_manager_node
+# target_link_libraries(monitored_navigation_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -129,7 +149,7 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS human_help_manager human_help_manager_node
+# install(TARGETS monitored_navigation monitored_navigation_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -149,12 +169,16 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
+# install(PROGRAMS scripts/monitored_nav.py
+#          DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# )
+
 #############
 ## Testing ##
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_human_help_manager.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_monitored_navigation.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
