@@ -1,0 +1,23 @@
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package strands_recovery_behaviours
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Forthcoming
+-----------
+* moving mon nav config and launch files here
+* renaming smach recoveries package
+* fixing imports + sending number of fails when asking for help
+* update dependencies
+* small bug fix
+* logging pauses - user taking over with gamepad or pause service calls - to mongodb
+* adding mongo logging for backtrack recovery
+* publishing recovery events to a topic
+* waiting for backtrack action
+* using param server for the recovery parameters
+* update package.xml and CMakeLists.txt
+* re-adding possibility of pausing monitored navigation via gamepad or service call
+* moving human_help_manager service definition to human_help_manager package
+* removing monitored nav readme
+* removing monitored_navigation filesthat shoundlnt be here
+* implementation of recovery state machines for monitored navigation
+* Contributors: Bruno Lacerda
