@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(strands_recovery_behaviours)
-find_package(catkin REQUIRED monitored_navigation)
+find_package(catkin REQUIRED)
 catkin_package()
 
 install(DIRECTORY launch
