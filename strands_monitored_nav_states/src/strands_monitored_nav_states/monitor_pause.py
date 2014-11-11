@@ -5,7 +5,7 @@ from monitored_navigation.monitor_state import MonitorState
 
 from std_msgs.msg import Bool
 from sensor_msgs.msg import Joy
-from strands_recovery_behaviours.srv import PauseResumeNav
+from strands_monitored_nav_states.srv import PauseResumeNav
 
 
 
@@ -46,7 +46,7 @@ class MonitorPause(MonitorState):
             self.pad_paused=False
         else:
             self.pad_paused=True
-        self.pub.publish(self.pad_paused or service_paused)
+        self.pub.publish(self.pad_paused or self.service_paused)
 
  
     def pause_service_cb(self, req):
