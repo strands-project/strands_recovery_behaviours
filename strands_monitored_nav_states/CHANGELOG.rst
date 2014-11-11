@@ -2,6 +2,11 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* small bug fix
+* Contributors: Bruno Lacerda
+
 0.0.2 (2014-11-10)
 ------------------
 

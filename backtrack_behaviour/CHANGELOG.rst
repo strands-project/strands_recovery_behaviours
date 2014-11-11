@@ -2,6 +2,11 @@
 Changelog for package backtrack_behaviour
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added cmake_modules as a dependency to get Eigen
+* Contributors: Nils Bore
+
 0.0.2 (2014-11-10)
 ------------------
 
