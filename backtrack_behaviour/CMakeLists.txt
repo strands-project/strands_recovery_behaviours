@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
   geometry_msgs
   dynamic_reconfigure
+  cmake_modules
 )
 
 ## System dependencies are found with CMake's conventions
