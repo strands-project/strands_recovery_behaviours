@@ -2,8 +2,8 @@
 Changelog for package strands_human_help
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.3 (2014-11-11)
+------------------
 * Merge pull request `#15 <https://github.com/strands-project/strands_recovery_behaviours/issues/15>`_ from BFALacerda/hydro-devel
   small bug fix
 * update maintainer name in package.xml
