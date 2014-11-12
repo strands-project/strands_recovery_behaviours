@@ -33,8 +33,10 @@ class MonitoredNavEventClass:
         self.nav_event.n_help_requests=n_tries
     
     def insert(self):
-        message_proxy=MessageStoreProxy(collection='monitored_nav_events')
-        message_proxy.insert(self.nav_event)
+        log_to_db=rospy.get_param('log_mon_nav_events',False)
+        if log_to_db:
+            message_proxy=MessageStoreProxy(collection='monitored_nav_events')
+            message_proxy.insert(self.nav_event)
         self.pub.publish(self.nav_event)
 
 
