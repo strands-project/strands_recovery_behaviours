@@ -11,7 +11,7 @@ from mongo_logger import MonitoredNavEventClass
 
 
 class RecoverNavBacktrack(smach.State):
-    def __init__(self, max_backtrack_attempts=0, backtrack_meters_back=0.8):
+    def __init__(self, max_backtrack_attempts=2, backtrack_meters_back=0.8):
         smach.State.__init__(self,
                              outcomes=['succeeded', 'failure', 'preempted'],
                              input_keys=['goal','n_nav_fails'],
@@ -30,7 +30,7 @@ class RecoverNavBacktrack(smach.State):
 
     def execute(self, userdata):
         
-        max_backtrack_attempts=rospy.get_param('max_backtrack_attempts',0)     
+        max_backtrack_attempts=rospy.get_param('max_backtrack_attempts',2)     
         backtrack_meters_back=rospy.get_param('backtrack_meters_back',0.8)
         
         if self.preempt_requested():
