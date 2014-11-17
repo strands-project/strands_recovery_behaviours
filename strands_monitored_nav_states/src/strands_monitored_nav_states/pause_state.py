@@ -18,7 +18,7 @@ class PauseState(RecoverStateMachine):
         self.resume_monitor=MonitorPause(is_paused=True)
         
         with self:
-            smach.StateMachine.add('PAUSE_STATE',
+            smach.StateMachine.add('PAD_PAUSE_STATE',
                                    self.resume_monitor,
                                    transitions={'preempted':'preempted',
                                                 'invalid':'recovered_without_help',
