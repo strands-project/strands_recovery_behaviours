@@ -3,6 +3,7 @@ import rospy
 import smach
 from restart_bumper import RestartBumper
 from scitos_msgs.srv import EnableMotors
+from scitos_msgs.msg import MotorStatus
 from monitored_navigation.recover_state_machine import RecoverStateMachine
 
 from std_srvs.srv import Empty
@@ -35,7 +36,7 @@ class RecoverBumper(RecoverStateMachine):
 class BumperHelp(smach.State):
     def __init__(self,max_bumper_recovery_attempts=5, wait_for_bumper_help_timeout=40, wait_for_bumper_help_finished=60):
             smach.State.__init__(self,
-                                outcomes=['recovered_without_help', 'not_recovered_without_help', 'preempted', "try_restart"],
+                                outcomes=['recovered_without_help', 'not_recovered_without_help','recovered_with_help', 'not_recovered_with_help', 'preempted', "try_restart"],
                                 input_keys=[ 'recovered']
                                 )
                                 
@@ -63,6 +64,8 @@ class BumperHelp(smach.State):
             self.help_finished_service_name="bumper_help_finished"
             self.help_done_monitor=rospy.Service('/monitored_navigation/'+self.help_finished_service_name, Empty, self.help_finished_cb)
             
+            self.motor_monitor = rospy.Subscriber("/motor_status", MotorStatus, self.bumper_monitor_cb)
+            self.bumper_pressed=True 
             
             
     def help_offered_cb(self, req):
@@ -73,7 +76,7 @@ class BumperHelp(smach.State):
         self.being_helped=False
         self.help_finished=True
         return []
-        
+
        
    
     def ask_help(self):
@@ -81,6 +84,9 @@ class BumperHelp(smach.State):
             self.ask_help_srv(self.service_msg)
         except rospy.ServiceException, e:
             rospy.logwarn("No means of asking for human help available.")
+            
+    def bumper_monitor_cb(self, msg):
+        self.bumper_pressed = msg.bumper_pressed
 
 
     def execute(self, userdata):
@@ -97,7 +103,7 @@ class BumperHelp(smach.State):
             self.service_preempt()
             return 'preempted'
         
-        self.service_msg.n_tries=self.n_tries
+        self.service_msg.n_fails=self.n_tries
         if userdata.recovered:
             self.service_msg.interaction_status=AskHelpRequest.HELP_FINISHED
             self.service_msg.interaction_service='none'
@@ -123,16 +129,17 @@ class BumperHelp(smach.State):
             if self.preempt_requested():
                 self.service_preempt()
                 return 'preempted'
-            if self.n_tries>1:
-                self.service_msg.interaction_status=AskHelpRequest.ASKING_HELP
-                self.service_msg.interaction_service=self.help_offered_service_name
-                self.ask_help()
+            self.service_msg.interaction_status=AskHelpRequest.ASKING_HELP
+            self.service_msg.interaction_service=self.help_offered_service_name
+            self.ask_help()
             for i in range(0,wait_for_bumper_help_timeout):    
                 if self.being_helped:
                     break
                 if self.preempt_requested():
                     self.service_preempt()
                     return 'preempted'
+                if not self.bumper_pressed:
+                    return "try_restart"
                 rospy.sleep(1)
             if self.being_helped:
                 self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED

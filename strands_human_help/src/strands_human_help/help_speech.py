@@ -13,9 +13,14 @@ class HelpSpeech(UIHelper):
     def __init__(self):
 
         self.speaker=actionlib.SimpleActionClient('/speak', maryttsAction)
-        rospy.loginfo("Waiting for marytts action...") 
-        self.speaker.wait_for_server()
-        rospy.loginfo("Done") 
+        got_server=self.speaker.wait_for_server(rospy.Duration(1))
+        while not got_server:
+            rospy.loginfo("Help via speech is waiting for marytts action...")
+            got_server=self.speaker.wait_for_server(rospy.Duration(1))
+            if rospy.is_shutdown():
+                return
+        
+        rospy.loginfo("Help via speech got waiting for marytts action") 
         
         self.nav_help_speech='I am having problems moving. Please push me to a clear area.'
         self.bumper_help_speech='My bumper is being pressed. Please release it so I can move on!'
@@ -25,6 +30,8 @@ class HelpSpeech(UIHelper):
         self.was_helped=False
         
         UIHelper.__init__(self)
+        
+        rospy.loginfo("Help via speech initialized")
  
 
     def ask_help(self, failed_component, interaction_service, n_fails):

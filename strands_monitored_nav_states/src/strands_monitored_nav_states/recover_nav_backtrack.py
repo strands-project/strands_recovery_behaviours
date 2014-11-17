@@ -11,7 +11,7 @@ from mongo_logger import MonitoredNavEventClass
 
 
 class RecoverNavBacktrack(smach.State):
-    def __init__(self, max_backtrack_attempts=0, backtrack_meters_back=0.8):
+    def __init__(self, max_backtrack_attempts=2, backtrack_meters_back=0.8):
         smach.State.__init__(self,
                              outcomes=['succeeded', 'failure', 'preempted'],
                              input_keys=['goal','n_nav_fails'],
@@ -23,14 +23,18 @@ class RecoverNavBacktrack(smach.State):
         rospy.set_param('max_backtrack_attempts', max_backtrack_attempts)   
         rospy.set_param('backtrack_meters_back', backtrack_meters_back)
         self.backtrack_client = actionlib.SimpleActionClient('/do_backtrack', BacktrackAction)
-        rospy.loginfo("Waiting for backtrack action...") 
-        self.backtrack_client.wait_for_server()
-        rospy.loginfo("Done") 
+        got_server=self.backtrack_client.wait_for_server(rospy.Duration(1))
+        while not got_server:   
+            rospy.loginfo("Backtrack recovery state is waiting for backtrack action to start...")
+            got_server=self.backtrack_client.wait_for_server(rospy.Duration(1))
+            if rospy.is_shutdown():
+                return
+        rospy.loginfo("Backtrack recovery state initialized") 
         
 
     def execute(self, userdata):
         
-        max_backtrack_attempts=rospy.get_param('max_backtrack_attempts',0)     
+        max_backtrack_attempts=rospy.get_param('max_backtrack_attempts',2)     
         backtrack_meters_back=rospy.get_param('backtrack_meters_back',0.8)
         
         if self.preempt_requested():

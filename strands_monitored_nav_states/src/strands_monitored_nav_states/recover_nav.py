@@ -57,7 +57,7 @@ class RecoverNavHelp(smach.State):
         self.being_helped=False
         self.help_finished=False
             
-        self.ask_help_srv=rospy.ServiceProxy('/monitored_navigation/human_help/manager', AskHelp)
+        self.ask_help_srv=rospy.ServiceProxy('/monitored_navigation/human_help', AskHelp)
         self.service_msg=AskHelpRequest()
         self.service_msg.failed_component='navigation'
             
