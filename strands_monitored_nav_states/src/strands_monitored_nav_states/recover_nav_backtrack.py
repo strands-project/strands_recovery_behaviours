@@ -23,9 +23,13 @@ class RecoverNavBacktrack(smach.State):
         rospy.set_param('max_backtrack_attempts', max_backtrack_attempts)   
         rospy.set_param('backtrack_meters_back', backtrack_meters_back)
         self.backtrack_client = actionlib.SimpleActionClient('/do_backtrack', BacktrackAction)
-        rospy.loginfo("Waiting for backtrack action...") 
-        self.backtrack_client.wait_for_server()
-        rospy.loginfo("Done") 
+        got_server=self.backtrack_client.wait_for_server(rospy.Duration(1))
+        while not got_server:   
+            rospy.loginfo("Backtrack recovery state is waiting for backtrack action to start...")
+            got_server=self.backtrack_client.wait_for_server(rospy.Duration(1))
+            if rospy.is_shutdown():
+                return
+        rospy.loginfo("Backtrack recovery state initialized") 
         
 
     def execute(self, userdata):

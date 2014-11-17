@@ -13,10 +13,18 @@ class HelpScreen(UIHelper):
 
     def __init__(self, webserver_srv_prefix='strands_webserver', service_prefix='/monitored_navigation', set_http_root=False):
         
-        rospy.loginfo("Waiting for webserver services...")
-        rospy.wait_for_service(webserver_srv_prefix + '/display_page')
-        rospy.wait_for_service(webserver_srv_prefix + '/get_hostname')
-        rospy.loginfo("Done")   
+        got_service=False
+        while not got_service:
+            try:
+                rospy.wait_for_service(webserver_srv_prefix + '/display_page', 1)
+                rospy.wait_for_service(webserver_srv_prefix + '/get_hostname',1)
+                got_service=True
+            except rospy.ROSException,e:
+                rospy.loginfo("help via screen is waiting for webserver services...")
+            if rospy.is_shutdown():
+                return
+
+        rospy.loginfo("help via screen got webserver services")   
         self.display_no = rospy.get_param("~display", 0)
         if set_http_root:
             strands_webserver.client_utils.set_http_root(roslib.packages.get_pkg_dir('strands_human_help/html'))           
@@ -33,11 +41,11 @@ class HelpScreen(UIHelper):
         self.help_instructions_html += '<li>Push me away from any obstructions into a clear space</li>'
         self.help_instructions_html += '<li>Press the '+ self.finish_label +' button below</li>'
         self.help_instructions_html += '</ol>'
-       
-        
-        
+    
         self.service_prefix=service_prefix
         UIHelper.__init__(self)
+        
+        rospy.loginfo("help via screen initialized")  
 
   
     def ask_help(self, failed_component, interaction_service, n_fails):
