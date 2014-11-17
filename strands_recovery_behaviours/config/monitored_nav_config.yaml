@@ -16,12 +16,18 @@ monitor_recovery_pairs:
         monitor_class: MonitorStuckOnCarpet
         recovery_file: recover_stuck_on_carpet_no_help
         recovery_class: RecoverStuckOnCarpetNoHelp
-    -   name: pause_nav
+    -   name: pad_pause_nav
         package: strands_monitored_nav_states
         monitor_file: monitor_pause
         monitor_class: MonitorPause
         recovery_file: pause_state
         recovery_class: PauseState
+    -   name: service_pause_nav
+        package: monitored_navigation
+        monitor_file: monitor_srv_pause
+        monitor_class: MonitorSrvPause
+        recovery_file: pause_srv_state
+        recovery_class: PauseSrvState
 human_help:
     -   name: speech
         package: strands_human_help
