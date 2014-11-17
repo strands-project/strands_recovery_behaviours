@@ -97,7 +97,7 @@ class BumperHelp(smach.State):
             self.service_preempt()
             return 'preempted'
         
-        self.service_msg.n_tries=self.n_tries
+        self.service_msg.n_fails=self.n_tries
         if userdata.recovered:
             self.service_msg.interaction_status=AskHelpRequest.HELP_FINISHED
             self.service_msg.interaction_service='none'
