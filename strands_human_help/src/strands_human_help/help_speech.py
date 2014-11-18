@@ -50,7 +50,7 @@ class HelpSpeech(UIHelper):
         self.was_helped=False
         
     def help_failed(self, failed_component, interaction_service, n_fails):
-        self.call_speech(self.help_failed)
+        self.call_speech(self.help_failed_speech)
     
    
     def call_speech(self, text):
