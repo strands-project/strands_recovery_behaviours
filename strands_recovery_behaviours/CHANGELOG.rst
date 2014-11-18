@@ -2,8 +2,8 @@
 Changelog for package strands_recovery_behaviours
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.5 (2014-11-18)
+------------------
 * splitting pad and service pause in config file
 * Contributors: Bruno Lacerda
 

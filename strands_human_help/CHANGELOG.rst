@@ -2,8 +2,8 @@
 Changelog for package strands_human_help
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.5 (2014-11-18)
+------------------
 * keeping nodes printing run dependencies that are missing
 * Contributors: Bruno Lacerda
 

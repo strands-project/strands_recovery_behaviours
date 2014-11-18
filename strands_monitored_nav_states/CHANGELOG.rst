@@ -2,8 +2,8 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.5 (2014-11-18)
+------------------
 * keeping nodes printing run dependencies that are missing
 * wait a bit more to ask for help
 * changing default backtrack tries to 2
