@@ -55,6 +55,6 @@ class HelpSpeech(UIHelper):
    
     def call_speech(self, text):
         self.speaker.send_goal(maryttsGoal(text=text))
-        self.speaker.wait_for_result()
+        #self.speaker.wait_for_result()
  
   
