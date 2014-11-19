@@ -54,7 +54,7 @@ class BacktrackServer(object):
         
         self.server = actionlib.SimpleActionServer('do_backtrack', BacktrackAction, self.execute, False)
         self.server.start()
-        rospy.loginfo("/do_backtrack action server started") 
+        rospy.loginfo("/do_backtrack action server started")
         
     def global_planner_checker_cb(self, msg):
         self.global_plan = msg
@@ -107,7 +107,12 @@ class BacktrackServer(object):
         config = self.move_base_reconfig_client.update_configuration(params)
                                                   
     def execute(self, goal):
-        #back track in elegant fashion     
+        #back track in elegant fashion
+        sources = rospy.get_param("/move_base/local_costmap/obstacle_layer/observation_sources")
+        if "head_cloud_sensor" not in sources:
+            rospy.logwarn("Navigation with head camera not active in move_base configuration, aborting...")
+            self.server.set_aborted()
+            return # 'failure'
         try:
             previous_position = rospy.ServiceProxy('previous_position', PreviousPosition)
             meter_back = previous_position(goal.meters_back)
@@ -125,10 +130,10 @@ class BacktrackServer(object):
         self.feedback.status = "Moving the PTU"
         self.server.publish_feedback(self.feedback)
         ptu_goal = PtuGotoGoal();
-        ptu_goal.pan = 179
+        ptu_goal.pan = -175
         ptu_goal.tilt = 30
-        ptu_goal.pan_vel = 20
-        ptu_goal.tilt_vel = 20
+        ptu_goal.pan_vel = 30
+        ptu_goal.tilt_vel = 30
         self.ptu_action_client.send_goal(ptu_goal)
         self.ptu_action_client.wait_for_result()
         
