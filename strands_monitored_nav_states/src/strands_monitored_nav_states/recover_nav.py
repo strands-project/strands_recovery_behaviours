@@ -36,7 +36,7 @@ class RecoverNav(RecoverStateMachine):
 
 
 class RecoverNavHelp(smach.State):
-    def __init__(self,max_nav_recovery_attempts=5, wait_for_nav_help_timeout=40, wait_for_nav_help_finished=60):
+    def __init__(self, wait_for_nav_help_timeout=40, wait_for_nav_help_finished=60):
         smach.State.__init__(self,
                              # we need the number of move_base fails as
                              # incoming data from the move_base action state,
@@ -47,7 +47,6 @@ class RecoverNavHelp(smach.State):
                              output_keys=['goal','n_nav_fails'],
                              )
 
-        rospy.set_param('max_nav_recovery_attempts', max_nav_recovery_attempts)
         rospy.set_param('wait_for_nav_help_timeout', wait_for_nav_help_timeout)
         rospy.set_param('wait_for_nav_help_finished', wait_for_nav_help_finished)
         self.nav_stat=None
@@ -87,7 +86,6 @@ class RecoverNavHelp(smach.State):
 
     def execute(self, userdata):
         
-        max_nav_recovery_attempts=rospy.get_param('max_nav_recovery_attempts',5)
         wait_for_nav_help_timeout=rospy.get_param('wait_for_nav_help_timeout',40)
         wait_for_nav_help_finished=rospy.get_param('wait_for_nav_help_finished',60)
         
@@ -99,49 +97,41 @@ class RecoverNavHelp(smach.State):
             self.service_preempt(userdata.n_nav_fails)
             return 'preempted'
 
-        if userdata.n_nav_fails < max_nav_recovery_attempts:
-   
-            self.service_msg.n_fails=userdata.n_nav_fails
-            self.service_msg.interaction_status=AskHelpRequest.ASKING_HELP
-            self.service_msg.interaction_service=self.help_offered_service_name
-            self.ask_help()
 
-            for i in range(0,wait_for_nav_help_timeout):
-                if self.preempt_requested():
-                    self.service_preempt(userdata.n_nav_fails)
-                    return 'preempted'
-                if self.being_helped:
-                    break
-                rospy.sleep(1)                   
-            if self.being_helped:
-                self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED
-                self.service_msg.interaction_service=self.help_finished_service_name
-                self.ask_help()
-                for i in range(0,wait_for_nav_help_finished):
-                    self.enable_motors(False) 
-                    if self.help_finished:
-                        break
-                    rospy.sleep(1)
-                    
-        
+        self.service_msg.n_fails=userdata.n_nav_fails
+        self.service_msg.interaction_status=AskHelpRequest.ASKING_HELP
+        self.service_msg.interaction_service=self.help_offered_service_name
+        self.ask_help()
+
+        for i in range(0,wait_for_nav_help_timeout):
             if self.preempt_requested():
                 self.service_preempt(userdata.n_nav_fails)
-                return 'preempted'  
+                return 'preempted'
+            if self.being_helped:
+                break
+            rospy.sleep(1)                   
+        if self.being_helped:
+            self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED
+            self.service_msg.interaction_service=self.help_finished_service_name
+            self.ask_help()
+            for i in range(0,wait_for_nav_help_finished):
+                self.enable_motors(False) 
+                if self.help_finished:
+                    break
+                rospy.sleep(1)
+                
+    
+        if self.preempt_requested():
+            self.service_preempt(userdata.n_nav_fails)
+            return 'preempted'  
 
-            if self.being_helped or self.help_finished:
-                self.finish_execution(userdata.n_nav_fails)
-                return 'recovered_with_help'
-            else:
-                self.finish_execution(userdata.n_nav_fails)
-                return 'recovered_without_help'
+        if self.being_helped or self.help_finished:
+            self.finish_execution(userdata.n_nav_fails)
+            return 'recovered_with_help'
         else:
-            userdata.n_nav_fails=0
-            if self.being_helped or self.help_finished:
-                self.finish_execution(userdata.n_nav_fails)
-                return 'not_recovered_with_help'
-            else:
-                self.finish_execution(userdata.n_nav_fails)
-                return 'not_recovered_without_help'
+            self.finish_execution(userdata.n_nav_fails)
+            return 'recovered_without_help'
+
 
 
     def finish_execution(self, n_tries):
