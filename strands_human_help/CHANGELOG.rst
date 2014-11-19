@@ -2,8 +2,8 @@
 Changelog for package strands_human_help
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.6 (2014-11-19)
+------------------
 * say correct sentence after help fail
 * Contributors: Bruno Lacerda
 
