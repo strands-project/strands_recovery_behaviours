@@ -108,7 +108,7 @@ class BacktrackServer(object):
                                                   
     def execute(self, goal):
         #back track in elegant fashion
-        sources = rospy.param_get("/move_base/local_costmap/obstacle_layer/observation_sources")
+        sources = rospy.get_param("/move_base/local_costmap/obstacle_layer/observation_sources")
         if "head_cloud_sensor" not in sources:
             rospy.logwarn("Navigation with head camera not active in move_base configuration, aborting...")
             self.server.set_aborted()
