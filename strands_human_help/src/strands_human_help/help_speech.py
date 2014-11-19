@@ -20,7 +20,7 @@ class HelpSpeech(UIHelper):
             if rospy.is_shutdown():
                 return
         
-        rospy.loginfo("Help via speech got waiting for marytts action") 
+        rospy.loginfo("Help via speech got marytts action") 
         
         self.nav_help_speech='I am having problems moving. Please push me to a clear area.'
         self.bumper_help_speech='My bumper is being pressed. Please release it so I can move on!'
