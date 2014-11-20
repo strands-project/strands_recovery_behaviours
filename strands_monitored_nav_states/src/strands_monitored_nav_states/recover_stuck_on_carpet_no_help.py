@@ -52,6 +52,10 @@ class CarpetState(smach.State):
         
         self.nav_stat.finalize(False,0)
         self.nav_stat.insert()
+        
+        if self.preempt_requested(): 
+            self.service_preempt()
+            return 'preempted'
 
         #TODO: find way to check if behaviour was successful       
         if True:     

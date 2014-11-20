@@ -24,12 +24,12 @@ class RestartBumper(smach.State):
     
     def execute(self, userdata):
         
+        rospy.sleep(1)
+        
         if self.preempt_requested(): 
             self.service_preempt()
             return 'preempted'
-        
-        rospy.sleep(1)
-        
+                
         if self.is_recovered:
             self.reset_motorstop()
             userdata.recovered=True

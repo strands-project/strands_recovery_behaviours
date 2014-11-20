@@ -120,6 +120,11 @@ class Backtrack(smach.State):
             self.backtrack_client.wait_for_result(rospy.Duration(0.2))
         self.nav_stat.finalize(was_helped=False,n_tries=userdata.n_nav_fails)
         self.nav_stat.insert()
+        if self.preempt_requested():
+            self.nav_stat.finalize(was_helped=False,n_tries=userdata.n_nav_fails)
+            self.nav_stat.insert()
+            self.service_preempt()
+            return 'preempted'
         if status == GoalStatus.SUCCEEDED:
             return 'succeeded'
         return 'failure'
@@ -213,7 +218,10 @@ class Help(smach.State):
                 self.enable_motors(False) 
                 if self.help_finished:
                     break
-                rospy.sleep(1)
+                rospy.sleep(1)     
+                if self.preempt_requested():
+                    self.service_preempt(userdata.n_nav_fails)
+                    return 'preempted' 
                 
     
         if self.preempt_requested():
