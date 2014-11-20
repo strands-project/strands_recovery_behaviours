@@ -33,6 +33,7 @@ from backtrack_behaviour.msg import BacktrackAction, BacktrackResult, BacktrackF
 class BacktrackServer(object):
     def __init__(self):
         rospy.init_node('backtrack_actionserver')
+        self.consider_moving_success = True
 
         self.ptu_action_client = actionlib.SimpleActionClient('/SetPTUState', PtuGotoAction)
         rospy.loginfo("Waiting for ptu action...") 
@@ -92,13 +93,19 @@ class BacktrackServer(object):
         if xdiff*xdiff + ydiff*ydiff > (meters_back+0.2)*(meters_back+0.2):
             return True
         return False
+        
+    def has_moved(self):
+        xdiff = self.x - self.first_x
+        ydiff = self.y - self.first_y
+        if xdiff*xdiff + ydiff*ydiff > 0.2*0.2:
+            return True
 
     def reset_ptu(self):
         ptu_goal = PtuGotoGoal();
         ptu_goal.pan = 0
         ptu_goal.tilt = 0
-        ptu_goal.pan_vel = 20
-        ptu_goal.tilt_vel = 20
+        ptu_goal.pan_vel = 30
+        ptu_goal.tilt_vel = 30
         self.ptu_action_client.send_goal(ptu_goal)
         #self.ptu_action_client.wait_for_result()
 
@@ -202,8 +209,12 @@ class BacktrackServer(object):
         if self.server.is_preempt_requested():
             self.service_preempt()
             return
-            
-        if self.move_base_action_client.get_state() == GoalStatus.SUCCEEDED: #set the previous goal again
+        
+        if self.consider_moving_success and self.has_moved():
+            self.result.status = 'failure_but_moved'
+            self.server.set_succeeded(self.result)
+            return
+        elif self.move_base_action_client.get_state() == GoalStatus.SUCCEEDED: #set the previous goal again
             self.result.status = 'reached_point'
             self.server.set_succeeded(self.result)
             return
@@ -217,7 +228,7 @@ class BacktrackServer(object):
             else: # 'local_plan_failure'
                 self.result.status = 'local_plan_failure' # 'succeeded'
                 self.server.set_succeeded(self.result)
-                return      
+                return
 
     def service_preempt(self):
         #check if preemption is working
