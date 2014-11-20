@@ -16,7 +16,7 @@ from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
 
 
 class ClearCostmaps(smach.State):
-    def __init__(self, max_standalone_clear_attempts=1, wait_for_clearance_time=10):
+    def __init__(self, max_standalone_clear_attempts=1, wait_for_clearance_time=5):
         smach.State.__init__(self,
                              outcomes=['try_nav', 'do_other_recovery', 'preempted'],
                              input_keys=['goal','n_nav_fails'],
@@ -34,7 +34,7 @@ class ClearCostmaps(smach.State):
         
     def execute(self, userdata):
         max_standalone_clear_attempts=rospy.get_param('max_standalone_clear_attempts', 1)
-        wait_for_clearance_time=rospy.get_param('wait_for_clearance_time', 10)
+        wait_for_clearance_time=rospy.get_param('wait_for_clearance_time', 5)
         
         self.nav_stat=MonitoredNavEventClass()
         self.nav_stat.initialize(recovery_mechanism="nav_clear_costmap")
