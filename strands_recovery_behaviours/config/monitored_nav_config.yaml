@@ -16,6 +16,12 @@ monitor_recovery_pairs:
         monitor_class: MonitorStuckOnCarpet
         recovery_file: recover_stuck_on_carpet_no_help
         recovery_class: RecoverStuckOnCarpetNoHelp
+    -   name: magnetic_strip
+        package: strands_monitored_nav_states
+        monitor_file: monitor_magnetic_strip
+        monitor_class: MonitorMagneticStrip
+        recovery_file: recover_magnetic_strip
+        recovery_class: RecoverMagneticStrip
     -   name: pad_pause_nav
         package: strands_monitored_nav_states
         monitor_file: monitor_pause
