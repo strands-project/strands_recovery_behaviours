@@ -41,7 +41,7 @@ class ClearCostmaps(smach.State):
         
         for i in range(0,wait_for_clearance_time):
             if self.preempt_requested():
-                self.service_preempt()
+                self.service_preempt(userdata.n_nav_fails)
                 return 'preempted'
             rospy.sleep(1)
         
@@ -52,7 +52,7 @@ class ClearCostmaps(smach.State):
         
         
         if self.preempt_requested():
-            self.service_preempt()
+            self.service_preempt(userdata.n_nav_fails)
             return 'preempted'
             
         self.nav_stat.finalize(was_helped=False,n_tries=userdata.n_nav_fails)
@@ -63,8 +63,8 @@ class ClearCostmaps(smach.State):
         else:
             return 'try_nav'
             
-    def service_preempt(self):
-        self.nav_stat.finalize(was_helped=False,n_tries=userdata.n_nav_fails)
+    def service_preempt(self, n_tries):
+        self.nav_stat.finalize(was_helped=False,n_tries=n_tries)
         self.nav_stat.insert()
         smach.State.service_preempt(self)
 
