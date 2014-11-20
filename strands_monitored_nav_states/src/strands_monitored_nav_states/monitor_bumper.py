@@ -2,7 +2,6 @@ import rospy
 
 from monitored_navigation.monitor_state import MonitorState
 
-from std_msgs.msg import Bool
 from scitos_msgs.msg import MotorStatus, BarrierStatus
 
 
@@ -14,7 +13,6 @@ class MonitorBumper(MonitorState):
         self.motor_stopped=False
         self.free_run=False
         self.motor_listener = rospy.Subscriber("/motor_status", MotorStatus,  self.motor_cb)
-        #self.magnetic_helped = rospy.Subscriber("/magnetic_barrier_helped", Bool,  self.barrier_helped_cb)
     
     """ Test the message and decide exit or not """
     def cb(self,  ud,  msg):
