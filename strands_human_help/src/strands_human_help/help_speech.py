@@ -20,10 +20,11 @@ class HelpSpeech(UIHelper):
             if rospy.is_shutdown():
                 return
         
-        rospy.loginfo("Help via speech got waiting for marytts action") 
+        rospy.loginfo("Help via speech got marytts action") 
         
         self.nav_help_speech='I am having problems moving. Please push me to a clear area.'
         self.bumper_help_speech='My bumper is being pressed. Please release it so I can move on!'
+        self.magnetic_help_speech="I am too close to these stairs, and afraid to move. Please call one of my handlers"
         self.help_failed_speech='Something is still wrong. Are you sure I am in a clear area?'
         self.help_finished_speech='Thank you! I will be on my way.'
         
@@ -39,6 +40,8 @@ class HelpSpeech(UIHelper):
             self.call_speech(self.nav_help_speech)
         elif failed_component=='bumper':
             self.call_speech(self.bumper_help_speech)
+        elif failed_component=='magnetic_strip':
+            self.call_speech(self.magnetic_help_speech)
         
     def being_helped(self, failed_component, interaction_service, n_fails):
         self.was_helped=True
@@ -55,6 +58,6 @@ class HelpSpeech(UIHelper):
    
     def call_speech(self, text):
         self.speaker.send_goal(maryttsGoal(text=text))
-        self.speaker.wait_for_result()
+        #self.speaker.wait_for_result()
  
   

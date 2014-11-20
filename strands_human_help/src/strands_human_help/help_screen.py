@@ -35,6 +35,7 @@ class HelpScreen(UIHelper):
         self.finish_label='OK'
         self.bumper_help_html='Help! My bumper is stuck against something. If you can help me, please press the button below.'
         self.nav_help_html='Help! I appear to have trouble moving past an obstruction. If you can help me, please press the button below.' 
+        self.magnetic_stip_help_html='I feel very unconfortable about moving in this area, please call one of my handlers.'
         self.help_instructions_html='Thank you! Please follow these instructions:' 
         self.help_instructions_html += '<hr/>' 
         self.help_instructions_html += '<ol>'
@@ -53,6 +54,8 @@ class HelpScreen(UIHelper):
             self.generate_help_content(self.help_label, self.nav_help_html,  interaction_service)
         elif failed_component=='bumper':
             self.generate_help_content(self.help_label, self.bumper_help_html,  interaction_service)
+        elif failed_component=='magnetic_strip':
+            self.generate_help_content(None, self.magnetic_stip_help_html,  interaction_service)
         
     def being_helped(self, failed_component, interaction_service, n_fails):
         self.generate_help_content(self.finish_label, self.help_instructions_html,  interaction_service)
@@ -68,8 +71,11 @@ class HelpScreen(UIHelper):
         strands_webserver.client_utils.display_relative_page(self.display_no, 'index.html')
     
     def generate_help_content(self,label, html, interaction_service):
-        buttons = [(label, interaction_service)]
-        content = strands_webserver.page_utils.generate_alert_button_page(html, buttons, self.service_prefix)        
+        if label is None:
+            content=self.magnetic_stip_help_html
+        else:
+            buttons = [(label, interaction_service)]
+            content = strands_webserver.page_utils.generate_alert_button_page(html, buttons, self.service_prefix)        
         strands_webserver.client_utils.display_content(self.display_no, content)
         
 
