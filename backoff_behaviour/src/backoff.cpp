@@ -4,7 +4,6 @@
 #include <sensor_msgs/LaserScan.h>
 #include <geometry_msgs/Twist.h>
 #include <move_base_msgs/MoveBaseAction.h>
-#include <ramp_climb/RampClimbingAction.h>
 #include <actionlib/server/simple_action_server.h>
 
 typedef actionlib::SimpleActionServer<move_base_msgs::MoveBaseAction> Server;
