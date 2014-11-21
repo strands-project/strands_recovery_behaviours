@@ -52,11 +52,6 @@ target_link_libraries (backoff_behaviour  ${catkin_LIBRARIES})
 ## Install ##
 #############
 
- install(PROGRAMS
-    scripts/test.sh
-    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
- )
-
  install(TARGETS backoff_behaviour
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
