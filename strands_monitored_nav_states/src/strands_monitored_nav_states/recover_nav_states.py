@@ -45,10 +45,13 @@ class ClearCostmaps(smach.State):
                 return 'preempted'
             rospy.sleep(1)
         
-        
-        self.clear_costmaps()
-        current_pose=rospy.wait_for_message('/robot_pose', Pose, timeout=10)
-        plan=self.path_finder(GetPlanRequest(start=PoseStamped(pose=current_pose), goal=userdata.goal.target_pose, tolerance=0.3))
+        try:
+            self.clear_costmaps()
+            current_pose=rospy.wait_for_message('/robot_pose', Pose, timeout=10)
+            plan=self.path_finder(GetPlanRequest(start=PoseStamped(pose=current_pose), goal=userdata.goal.target_pose, tolerance=0.3))
+        except Exception, e:
+            rospy.logwarn("Issue clearing costmaps.")
+            return 'do_other_recovery'
         
         
         if self.preempt_requested():

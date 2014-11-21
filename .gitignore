@@ -55,3 +55,6 @@ target/
 
 #backup files
 *~
+
+# OSX stuff
+.DS_Store
