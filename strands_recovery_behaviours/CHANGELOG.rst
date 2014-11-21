@@ -4,6 +4,12 @@ Changelog for package strands_recovery_behaviours
 
 Forthcoming
 -----------
+* updated changelogs
+* magnetic strip monitor and recovery
+  just asks to call a robot handler and puts a message on screen
+  to restart the navigation there needss to be an explicit service call to /reset_barrier_stop done by one of us
+* Contributors: Bruno Lacerda, Marc Hanheide
+
 * magnetic strip monitor and recovery
   just asks to call a robot handler and puts a message on screen
   to restart the navigation there needss to be an explicit service call to /reset_barrier_stop done by one of us

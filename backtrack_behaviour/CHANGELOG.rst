@@ -4,6 +4,14 @@ Changelog for package backtrack_behaviour
 
 Forthcoming
 -----------
+* updated changelogs
+* Forgot to change the speed of going back to 0 as well
+* Return success if backtrack moves at all
+* Fixed bug
+* Added output if no head camera
+* Made the head turn the other way and not at all if no head_obstacle_cloud in sources
+* Contributors: Marc Hanheide, Nils Bore
+
 * Forgot to change the speed of going back to 0 as well
 * Return success if backtrack moves at all
 * Fixed bug
