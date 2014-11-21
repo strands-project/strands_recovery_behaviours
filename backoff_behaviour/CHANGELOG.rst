@@ -2,6 +2,11 @@
 Changelog for package backoff_behaviour
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* removed invalid install target
+* Contributors: Marc Hanheide
+
 0.0.7 (2014-11-21)
 ------------------
 * Adjusting version number
