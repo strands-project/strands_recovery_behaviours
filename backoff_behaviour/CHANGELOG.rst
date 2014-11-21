@@ -2,8 +2,8 @@
 Changelog for package backoff_behaviour
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.7 (2014-11-21)
+------------------
 * Adjusting version number
 * updated changelogs
 * Backoff recovery fix.

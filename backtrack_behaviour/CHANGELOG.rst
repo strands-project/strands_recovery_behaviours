@@ -2,8 +2,8 @@
 Changelog for package backtrack_behaviour
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.7 (2014-11-21)
+------------------
 * updated changelogs
 * Forgot to change the speed of going back to 0 as well
 * Return success if backtrack moves at all

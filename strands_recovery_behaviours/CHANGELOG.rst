@@ -2,8 +2,8 @@
 Changelog for package strands_recovery_behaviours
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.7 (2014-11-21)
+------------------
 * updated changelogs
 * magnetic strip monitor and recovery
   just asks to call a robot handler and puts a message on screen
