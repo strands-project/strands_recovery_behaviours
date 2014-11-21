@@ -51,7 +51,7 @@ class ClearCostmaps(smach.State):
             plan=self.path_finder(GetPlanRequest(start=PoseStamped(pose=current_pose), goal=userdata.goal.target_pose, tolerance=0.3))
         except Exception, e:
             rospy.logwarn("Issue clearing costmaps.")
-            return 'do_another_recovery'
+            return 'do_other_recovery'
         
         
         if self.preempt_requested():
