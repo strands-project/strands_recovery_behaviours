@@ -2,6 +2,15 @@
 Changelog for package strands_human_help
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* magnetic strip monitor and recovery
+  just asks to call a robot handler and puts a message on screen
+  to restart the navigation there needss to be an explicit service call to /reset_barrier_stop done by one of us
+* proper warning message
+* stop waiting for mary as it might block the whole state machine
+* Contributors: Bruno Lacerda
+
 0.0.6 (2014-11-19)
 ------------------
 * say correct sentence after help fail

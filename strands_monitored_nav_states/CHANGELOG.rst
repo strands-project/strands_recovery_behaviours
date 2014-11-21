@@ -2,6 +2,64 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* changing default mongo loging back to true
+* minor code clean
+* magnetic strip monitor and recovery
+  just asks to call a robot handler and puts a message on screen
+  to restart the navigation there needss to be an explicit service call to /reset_barrier_stop done by one of us
+* reducing time waited before clearing the costmaps
+* making sure states preempt
+* bug fix on clear costmaps recovery
+* making sure bumper monitor does not try to restart motors after finding a barrier
+* adding force clear costmap state;
+  all nav recovery states put in the same file
+* stop using max recover attempts for nav as it always output to topological nav anyway
+* Contributors: Bruno Lacerda
+
+* changing default mongo loging back to true
+* minor code clean
+* magnetic strip monitor and recovery
+  just asks to call a robot handler and puts a message on screen
+  to restart the navigation there needss to be an explicit service call to /reset_barrier_stop done by one of us
+* reducing time waited before clearing the costmaps
+* making sure states preempt
+* bug fix on clear costmaps recovery
+* making sure bumper monitor does not try to restart motors after finding a barrier
+* adding force clear costmap state;
+  all nav recovery states put in the same file
+* stop using max recover attempts for nav as it always output to topological nav anyway
+* Contributors: Bruno Lacerda
+
+* changing default mongo loging back to true
+* minor code clean
+* magnetic strip monitor and recovery
+  just asks to call a robot handler and puts a message on screen
+  to restart the navigation there needss to be an explicit service call to /reset_barrier_stop done by one of us
+* reducing time waited before clearing the costmaps
+* making sure states preempt
+* bug fix on clear costmaps recovery
+* making sure bumper monitor does not try to restart motors after finding a barrier
+* adding force clear costmap state;
+  all nav recovery states put in the same file
+* stop using max recover attempts for nav as it always output to topological nav anyway
+* Contributors: Bruno Lacerda
+
+* changing default mongo loging back to true
+* minor code clean
+* magnetic strip monitor and recovery
+  just asks to call a robot handler and puts a message on screen
+  to restart the navigation there needss to be an explicit service call to /reset_barrier_stop done by one of us
+* reducing time waited before clearing the costmaps
+* making sure states preempt
+* bug fix on clear costmaps recovery
+* making sure bumper monitor does not try to restart motors after finding a barrier
+* adding force clear costmap state;
+  all nav recovery states put in the same file
+* stop using max recover attempts for nav as it always output to topological nav anyway
+* Contributors: Bruno Lacerda
+
 0.0.6 (2014-11-19)
 ------------------
 
