@@ -43,3 +43,7 @@ human_help:
         package: strands_human_help
         helper_file: help_screen
         helper_class: HelpScreen
+    -   name: twitter
+        package: strands_human_help
+        helper_file: help_tweet
+        helper_class: HelpTweet
