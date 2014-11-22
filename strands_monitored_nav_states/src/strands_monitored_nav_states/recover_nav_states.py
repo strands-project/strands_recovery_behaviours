@@ -9,6 +9,7 @@ from geometry_msgs.msg import Pose, PoseStamped
 import actionlib
 from actionlib_msgs.msg import GoalStatus
 from backtrack_behaviour.msg import BacktrackAction, BacktrackGoal
+from mary_tts.msg import maryttsAction, maryttsGoal
 
 from std_srvs.srv import Empty
 from scitos_msgs.srv import EnableMotors
@@ -81,6 +82,17 @@ class Backtrack(smach.State):
                              )
                              
         self.nav_stat=None
+        
+        self.speaker=actionlib.SimpleActionClient('/speak', maryttsAction)
+        got_server=self.speaker.wait_for_server(rospy.Duration(1))
+        while not got_server:
+            rospy.loginfo("Backtrack behaviour is waiting for marytts action...")
+            got_server=self.speaker.wait_for_server(rospy.Duration(1))
+            if rospy.is_shutdown():
+                return
+        
+        rospy.loginfo("Backtrack behaviour got marytts action")
+        self.speech="I am stuck here, so I will start moving backwards. Please get out of the way."
 
         rospy.set_param('max_backtrack_attempts', max_backtrack_attempts)   
         rospy.set_param('backtrack_meters_back', backtrack_meters_back)
@@ -108,6 +120,9 @@ class Backtrack(smach.State):
             
         self.nav_stat=MonitoredNavEventClass()
         self.nav_stat.initialize(recovery_mechanism="nav_backtrack")
+        
+        self.speaker.send_goal(maryttsGoal(text=self.speech))
+        rospy.sleep(2)
             
         backtrack_goal = BacktrackGoal()
         backtrack_goal.meters_back = backtrack_meters_back
