@@ -15,10 +15,10 @@ from mongo_logger import MonitoredNavEventClass
 
 
 class RecoverBumper(RecoverStateMachine):
-    def __init__(self,max_bumper_recovery_attempts=5):
+    def __init__(self,max_bumper_recovery_attempts=1000):
         RecoverStateMachine.__init__(self)
         self.restart_bumper=RestartBumper()
-        self.bumper_help=BumperHelp(5)
+        self.bumper_help=BumperHelp(max_bumper_recovery_attempts)
         
         with self:
             smach.StateMachine.add('RESTART_BUMPER',
@@ -34,7 +34,7 @@ class RecoverBumper(RecoverStateMachine):
  
 
 class BumperHelp(smach.State):
-    def __init__(self,max_bumper_recovery_attempts=5, wait_for_bumper_help_timeout=40, wait_for_bumper_help_finished=60):
+    def __init__(self,max_bumper_recovery_attempts=1000, wait_for_bumper_help_timeout=40, wait_for_bumper_help_finished=60):
             smach.State.__init__(self,
                                 outcomes=['recovered_without_help', 'not_recovered_without_help','recovered_with_help', 'not_recovered_with_help', 'preempted', "try_restart"],
                                 input_keys=[ 'recovered']
@@ -91,7 +91,7 @@ class BumperHelp(smach.State):
 
     def execute(self, userdata):
         
-        max_bumper_recovery_attempts=rospy.get_param('max_bumper_recovery_attempts',5)
+        max_bumper_recovery_attempts=rospy.get_param('max_bumper_recovery_attempts',1000)
         wait_for_bumper_help_timeout=rospy.get_param('wait_for_bumper_help_timeout',40)
         wait_for_bumper_help_finished=rospy.get_param('wait_for_bumper_help_finished',60)
         

@@ -12,10 +12,10 @@ from mongo_logger import MonitoredNavEventClass
 
 
 class RecoverBumperNoHelp(RecoverStateMachine):
-    def __init__(self,max_bumper_recovery_attempts=5):
+    def __init__(self,max_bumper_recovery_attempts=1000):
         RecoverStateMachine.__init__(self)
         self.restart_bumper=RestartBumper()
-        self.bumper_output=BumperOutput(5)
+        self.bumper_output=BumperOutput(max_bumper_recovery_attempts)
         
         with self:
             smach.StateMachine.add('RESTART_BUMPER',
@@ -31,7 +31,7 @@ class RecoverBumperNoHelp(RecoverStateMachine):
         
 
 class BumperOutput(smach.State):
-    def __init__(self,max_bumper_recovery_attempts=5):
+    def __init__(self,max_bumper_recovery_attempts=1000):
             smach.State.__init__(self,
                                 outcomes=['recovered_without_help', 'not_recovered_without_help', 'preempted', "try_restart"],
                                 input_keys=['recovered']
@@ -43,7 +43,7 @@ class BumperOutput(smach.State):
 
     def execute(self, userdata):
         
-        max_bumper_recovery_attempts=rospy.get_param('max_bumper_recovery_attempts',5)
+        max_bumper_recovery_attempts=rospy.get_param('max_bumper_recovery_attempts',1000)
         
         if self.n_tries==0:
             self.nav_stat=MonitoredNavEventClass()

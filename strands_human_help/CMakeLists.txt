@@ -9,7 +9,9 @@ find_package(catkin REQUIRED COMPONENTS
                                 monitored_navigation
                                 strands_webserver
                                 actionlib
-                                mary_tts)
+                                mary_tts
+                                strands_tweets
+                                )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)

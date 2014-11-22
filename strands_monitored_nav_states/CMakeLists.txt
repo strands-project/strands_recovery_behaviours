@@ -17,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   move_base_msgs
   sensor_msgs
   backtrack_behaviour
+  mary_tts
 )
 
 
