@@ -22,9 +22,9 @@ class HelpSpeech(UIHelper):
         
         rospy.loginfo("Help via speech got marytts action") 
         
-        self.nav_help_speech='I am having problems moving. Please push me to a clear area.'
-        self.bumper_help_speech='My bumper is being pressed. Please release it so I can move on!'
-        self.magnetic_help_speech="I am too close to these stairs, and afraid to move. Please call one of my handlers"
+        self.nav_help_speech='I am having problems moving. Please check my screen for instructions on how to help me.'
+        self.bumper_help_speech='My bumper is being pressed. Please check my screen for instructions on how to help me.'
+        self.magnetic_help_speech="I am too close to these stairs, and afraid to move. Please call one of my handlers."
         self.help_failed_speech='Something is still wrong. Are you sure I am in a clear area?'
         self.help_finished_speech='Thank you! I will be on my way.'
         
