@@ -2,6 +2,13 @@
 Changelog for package strands_human_help
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Changing help speech to explicitely tell people to look to the robot's screen
+* bug fixes for twitter help
+* adding twitter help - always for magnetic strip, once when nav or bumper fails 20 times in a row
+* Contributors: Bruno Lacerda
+
 0.0.9 (2014-11-21)
 ------------------
 

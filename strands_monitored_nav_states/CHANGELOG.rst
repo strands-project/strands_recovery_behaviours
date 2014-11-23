@@ -2,6 +2,15 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Making sure free run is turned off after help is done
+* adding simple "pause and the rety nav" recovery state
+* removing clear costmaps recovery as move base seems to not be robust in terms of costmap reloading
+* increase default of max bumper recoveries to very large number. it will be removed later because it doesnt make sense
+* robot speaks to warn he is going to backtrack
+* Contributors: Bruno Lacerda
+
 0.0.9 (2014-11-21)
 ------------------
 * fixing typo
