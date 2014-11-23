@@ -157,6 +157,7 @@ class BumperHelp(smach.State):
       
       
     def finish_execution(self):
+        self.enable_motors(True) 
         self.nav_stat.finalize(self.being_helped or self.help_finished,self.n_tries)
         self.being_helped=False
         self.help_finished=False
