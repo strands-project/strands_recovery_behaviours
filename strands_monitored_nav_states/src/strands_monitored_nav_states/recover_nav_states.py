@@ -16,6 +16,50 @@ from scitos_msgs.srv import EnableMotors
 from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
 
 
+class SleepAndRetry(smach.State):
+    def __init__(self, max_sleep_and_retry_attempts=1, sleep_time=5):
+        smach.State.__init__(self,
+                             outcomes=['try_nav', 'do_other_recovery', 'preempted'],
+                             input_keys=['goal','n_nav_fails'],
+                             output_keys=['goal','n_nav_fails'],
+                             )
+
+        rospy.set_param('max_sleep_and_retry_attempts', max_sleep_and_retry_attempts)
+        rospy.set_param('sleep_time', sleep_time)
+        
+        self.nav_stat=None
+        
+        
+    def execute(self, userdata):
+        max_sleep_and_retry_attempts=rospy.get_param('max_sleep_and_retry_attempts', 1)
+        sleep_time=rospy.get_param('sleep_time', 5)
+        
+        self.nav_stat=MonitoredNavEventClass()
+        self.nav_stat.initialize(recovery_mechanism="nav_sleep_and_retry")
+        
+        
+        for i in range(0,sleep_time):
+            if self.preempt_requested():
+                self.service_preempt(userdata.n_nav_fails)
+                return 'preempted'
+            rospy.sleep(1)
+       
+            
+        self.nav_stat.finalize(was_helped=False,n_tries=userdata.n_nav_fails)
+        self.nav_stat.insert()
+        
+        if userdata.n_nav_fails>max_sleep_and_retry_attempts:
+            return 'do_other_recovery'
+        else:
+            return 'try_nav'
+            
+    def service_preempt(self, n_tries):
+        self.nav_stat.finalize(was_helped=False,n_tries=n_tries)
+        self.nav_stat.insert()
+        smach.State.service_preempt(self)
+
+
+
 class ClearCostmaps(smach.State):
     def __init__(self, max_standalone_clear_attempts=1, wait_for_clearance_time=5):
         smach.State.__init__(self,
