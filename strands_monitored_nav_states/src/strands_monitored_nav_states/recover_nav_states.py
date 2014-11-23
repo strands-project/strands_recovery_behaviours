@@ -300,6 +300,7 @@ class Help(smach.State):
 
 
     def finish_execution(self, n_tries):
+        self.enable_motors(True) 
         self.service_msg.interaction_status=AskHelpRequest.HELP_FINISHED
         self.service_msg.interaction_service='none'
         self.ask_help()
