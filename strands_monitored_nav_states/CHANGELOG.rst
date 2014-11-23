@@ -2,8 +2,8 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.10 (2014-11-23)
+-------------------
 * Making sure free run is turned off after help is done
 * adding simple "pause and the rety nav" recovery state
 * removing clear costmaps recovery as move base seems to not be robust in terms of costmap reloading

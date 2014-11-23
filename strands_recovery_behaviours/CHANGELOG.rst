@@ -2,8 +2,8 @@
 Changelog for package strands_recovery_behaviours
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.10 (2014-11-23)
+-------------------
 * adding twitter help - always for magnetic strip, once when nav or bumper fails 20 times in a row
 * Contributors: Bruno Lacerda
 

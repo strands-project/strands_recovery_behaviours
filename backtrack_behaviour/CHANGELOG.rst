@@ -2,8 +2,8 @@
 Changelog for package backtrack_behaviour
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.10 (2014-11-23)
+-------------------
 * Added a try catch to reconfiguring move_base parameters
 * Contributors: Nils Bore
 
