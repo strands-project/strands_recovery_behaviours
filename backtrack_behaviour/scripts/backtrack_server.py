@@ -151,6 +151,7 @@ class BacktrackServer(object):
             return
             
         if self.start_republish() == False:
+            self.reset_ptu()
             pose_sub.unregister()
             self.server.set_aborted()
             return # 'failure'
@@ -160,8 +161,15 @@ class BacktrackServer(object):
         self.max_vel_x = rospy.get_param("/move_base/DWAPlannerROS/max_vel_x")
         self.min_vel_x = rospy.get_param("/move_base/DWAPlannerROS/min_vel_x")
         params = { 'max_vel_x' : 0.2, 'min_vel_x' : -0.2 }
-        config = self.move_base_reconfig_client.update_configuration(params)
-        
+        try:
+            config = self.move_base_reconfig_client.update_configuration(params)
+        except:
+            rospy.logwarn("Could not reconfigure move_base parameters, returning failure.")
+            self.reset_ptu()
+            pose_sub.unregister()
+            self.service_preempt()
+            return
+            
         self.feedback.status = "Moving the robot"
         self.server.publish_feedback(self.feedback)
         move_goal = MoveBaseGoal()
