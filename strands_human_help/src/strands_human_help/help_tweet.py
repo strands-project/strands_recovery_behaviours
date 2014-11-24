@@ -29,8 +29,8 @@ class HelpTweet(UIHelper):
             
         rospy.set_param('bumper_fails_to_tweet',20)
         rospy.set_param('nav_fails_to_tweet',20)
-        self.bumper_post="I've been crashed into something for quite some time now. Someone should come by and get me out of here."
-        self.nav_post="I've been having some issue going around for quite some time now. I'm sure I'm pretty stuck somewhere. What does it look like?"
+        self.bumper_post="I've been crashed into something for some time now. Someone should come by and get me out of here."
+        self.nav_post="I've been struggling to go around for a while now. I'm pretty sure I got stuck. What does it look like?"
         self.magnetic_post="I'm very close to a flight of stairs! I'm frozen in terror! I need one of my handlers to come and help me!"
         self.tweet=GrabImageThenTweetGoal(topic='head_xtion/rgb/image_color')
         
