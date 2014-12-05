@@ -19,7 +19,7 @@ class MonitorStuckOnCarpet(MonitorState):
         rospy.Subscriber("/cmd_vel", Twist, self.vel_callback)   
         rospy.Subscriber("/odom", Odometry, self.odom_callback)
  
-        self.pub = rospy.Publisher('/monitored_navigation/stuck_on_carpet', Bool)
+        self.pub = rospy.Publisher('/monitored_navigation/stuck_on_carpet', Bool, queue_size=1)
         self.pub_msg=Bool(False)
         
         

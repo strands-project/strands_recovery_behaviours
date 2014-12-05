@@ -25,7 +25,7 @@ class CarpetState(smach.State):
     def __init__(self):
         smach.State.__init__(self,
             outcomes=['recovered_with_help', 'recovered_without_help','not_recovered_with_help', 'not_recovered_without_help', 'preempted'])
-        self.vel_pub = rospy.Publisher('/cmd_vel', Twist)
+        self.vel_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
         self.vel_cmd = Twist()
         
 

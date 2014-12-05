@@ -14,7 +14,7 @@ class MonitorPause(MonitorState):
         #if is_paused monitors for resume, else monitors for pause
         self.is_paused=is_paused
         
-        self.pub=rospy.Publisher("monitored_navigation/pause_requested", Bool)
+        self.pub=rospy.Publisher("monitored_navigation/pause_requested", Bool, queue_size=1)
         
         #pause with joy
         self.pad_paused=False
