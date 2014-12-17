@@ -36,7 +36,10 @@ class SleepAndRetry(smach.State):
         
         if userdata.n_nav_fails<=max_sleep_and_retry_attempts:            
             self.nav_stat=MonitoredNavEventClass()
-            self.nav_stat.initialize(recovery_mechanism="nav_sleep_and_retry")
+            if userdata.n_nav_fails==1:
+                self.nav_stat.initialize(recovery_mechanism="nav_sleep_and_retry", log_costmaps=True)
+            else:
+                self.nav_stat.initialize(recovery_mechanism="nav_sleep_and_retry", log_costmaps=False)
             
             
             for i in range(0,sleep_time):
