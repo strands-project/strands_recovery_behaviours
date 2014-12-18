@@ -34,24 +34,29 @@ class SleepAndRetry(smach.State):
         max_sleep_and_retry_attempts=rospy.get_param('max_sleep_and_retry_attempts', 1)
         sleep_time=rospy.get_param('sleep_time', 5)
         
-        self.nav_stat=MonitoredNavEventClass()
-        self.nav_stat.initialize(recovery_mechanism="nav_sleep_and_retry")
-        
-        
-        for i in range(0,sleep_time):
-            if self.preempt_requested():
-                self.service_preempt(userdata.n_nav_fails)
-                return 'preempted'
-            rospy.sleep(1)
-       
+        if userdata.n_nav_fails<=max_sleep_and_retry_attempts:            
+            self.nav_stat=MonitoredNavEventClass()
+            if userdata.n_nav_fails==1:
+                self.nav_stat.initialize(recovery_mechanism="nav_sleep_and_retry", log_costmaps=True)
+            else:
+                self.nav_stat.initialize(recovery_mechanism="nav_sleep_and_retry", log_costmaps=False)
             
-        self.nav_stat.finalize(was_helped=False,n_tries=userdata.n_nav_fails)
-        self.nav_stat.insert()
+            
+            for i in range(0,sleep_time):
+                if self.preempt_requested():
+                    self.service_preempt(userdata.n_nav_fails)
+                    return 'preempted'
+                rospy.sleep(1)
         
-        if userdata.n_nav_fails>max_sleep_and_retry_attempts:
-            return 'do_other_recovery'
-        else:
+                
+            self.nav_stat.finalize(was_helped=False,n_tries=userdata.n_nav_fails)
+            self.nav_stat.insert()
             return 'try_nav'
+        else:
+            return 'do_other_recovery'
+
+            
+
             
     def service_preempt(self, n_tries):
         self.nav_stat.finalize(was_helped=False,n_tries=n_tries)
