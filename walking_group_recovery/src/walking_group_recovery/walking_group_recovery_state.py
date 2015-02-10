@@ -36,17 +36,17 @@ class WalkingGroupRecovery(smach.State):
             
         self.enable_motors= rospy.ServiceProxy('enable_motors', EnableMotors)
                
-        self.being_helped=False
+        self.being_helped=True
         self.help_finished=False
             
         self.ask_help_srv=rospy.ServiceProxy('/monitored_navigation/human_help', AskHelp)
         self.service_msg=AskHelpRequest()
         self.service_msg.failed_component='navigation'
             
-        self.help_offered_service_name='nav_help_offered'
+        self.help_offered_service_name='walking_help_offered'
         self.help_offered_monitor=rospy.Service('/monitored_navigation/'+self.help_offered_service_name, Empty, self.help_offered_cb)
             
-        self.help_finished_service_name="nav_help_finished"
+        self.help_finished_service_name="walking_help_finished"
         self.help_done_monitor=rospy.Service('/monitored_navigation/'+self.help_finished_service_name, Empty, self.help_finished_cb)
        
 
@@ -61,16 +61,10 @@ class WalkingGroupRecovery(smach.State):
         
 
     def ask_help(self):
-        pygame.mixer.init()
-        paths = roslib.packages.find_resource('walking_group_recovery', 'good_bad_ugly.mp3')
-        pygame.mixer.music.load(paths[0])
-        pygame.mixer.music.play()
-        while pygame.mixer.music.get_busy() == True:
-            continue
-        #try:
-        #    self.ask_help_srv(self.service_msg)
-        #except rospy.ServiceException, e:
-        #    rospy.logwarn("No means of asking for human help available.")
+        try:
+            self.ask_help_srv(self.service_msg)
+        except rospy.ServiceException, e:
+            rospy.logwarn("No means of asking for human help available.")
 
 
     def execute(self, userdata):
@@ -98,7 +92,11 @@ class WalkingGroupRecovery(smach.State):
                 return 'preempted'
             if self.being_helped:
                 break
-            rospy.sleep(1)                   
+            rospy.sleep(1)
+        pygame.mixer.init()
+        paths = roslib.packages.find_resource('walking_group_recovery', 'good_bad_ugly.mp3')
+        pygame.mixer.music.load(paths[0])
+        pygame.mixer.music.play()    
         if self.being_helped:
             self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED
             self.service_msg.interaction_service=self.help_finished_service_name
@@ -110,18 +108,22 @@ class WalkingGroupRecovery(smach.State):
                 rospy.sleep(1)     
                 if self.preempt_requested():
                     self.service_preempt(userdata.n_nav_fails)
+                    pygame.mixer.music.stop()
                     return 'preempted' 
                 
     
         if self.preempt_requested():
             self.service_preempt(userdata.n_nav_fails)
+            pygame.mixer.music.stop()
             return 'preempted'  
 
         if self.being_helped or self.help_finished:
             self.finish_execution(userdata.n_nav_fails)
+            pygame.mixer.music.stop()
             return 'recovered_with_help'
         else:
             self.finish_execution(userdata.n_nav_fails)
+            pygame.mixer.music.stop()
             return 'recovered_without_help'
 
 
@@ -140,5 +142,3 @@ class WalkingGroupRecovery(smach.State):
     def service_preempt(self, n_tries):
         self.finish_execution(n_tries)
         smach.State.service_preempt(self)
-        
-
