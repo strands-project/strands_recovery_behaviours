@@ -2,8 +2,8 @@
 Changelog for package walking_group_recovery
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.11 (2015-02-17)
+-------------------
 * Fixing version number
 * Now stopping music when we are finished
 * Created the walking group recovery with server to change back and forth between state machines
