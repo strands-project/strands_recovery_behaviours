@@ -57,8 +57,7 @@ class WalkingGroupRecovery(smach.State):
         self.help_finished_service_name="walking_help_finished"
         self.help_done_monitor=rospy.Service('/monitored_navigation/'+self.help_finished_service_name, Empty, self.help_finished_cb)
 
-        #self.music_set = 'walking_group_recovery'
-        self.music_set = 'aaf_walking_group'
+        self.music_set = 'walking_group_recovery'
         self.audio_folder = 'walking_group_recovery'
 
         hostname = rospy.get_param('mongodb_host')
