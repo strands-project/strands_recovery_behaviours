@@ -11,7 +11,7 @@ from actionlib_msgs.msg import GoalStatus
 from backtrack_behaviour.msg import BacktrackAction, BacktrackGoal
 from mary_tts.msg import maryttsAction, maryttsGoal
 
-from os.path import isfile, join, splitext, exists
+from os.path import isfile, join, splitext, exists, expanduser
 from os import makedirs
 
 from std_srvs.srv import Empty
@@ -58,7 +58,7 @@ class WalkingGroupRecovery(smach.State):
         self.help_done_monitor=rospy.Service('/monitored_navigation/'+self.help_finished_service_name, Empty, self.help_finished_cb)
 
         self.music_set = 'walking_group_recovery'
-        self.audio_folder = 'walking_group_recovery'
+        self.audio_folder = join(expanduser('~'), '.ros', 'walking_group_recovery')
 
         hostname = rospy.get_param('mongodb_host')
         port = rospy.get_param('mongodb_port')
