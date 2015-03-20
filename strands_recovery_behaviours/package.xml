@@ -17,6 +17,7 @@
   <run_depend>strands_human_help</run_depend>
   <run_depend>strands_monitored_nav_states</run_depend>
   <run_depend>monitored_navigation</run_depend>
+  <run_depend>walking_group_recovery</run_depend>
 
 
 </package>
