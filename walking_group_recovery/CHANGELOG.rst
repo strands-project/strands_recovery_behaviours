@@ -2,6 +2,13 @@
 Changelog for package walking_group_recovery
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Forgot to specify .ros
+* Changed to the correct music set
+* Integrated the player and media server stuff
+* Contributors: Nils Bore
+
 0.0.11 (2015-02-17)
 -------------------
 * Fixing version number
