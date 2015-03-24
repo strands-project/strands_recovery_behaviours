@@ -2,8 +2,8 @@
 Changelog for package strands_recovery_behaviours
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.12 (2015-03-24)
+-------------------
 * Adding walking_group_recovery to meta package
   Closes `#39 <https://github.com/strands-project/strands_recovery_behaviours/issues/39>`_
 * Contributors: Christian Dondrup
