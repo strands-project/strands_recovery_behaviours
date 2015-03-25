@@ -26,38 +26,38 @@ class SleepAndRetry(smach.State):
 
         rospy.set_param('max_sleep_and_retry_attempts', max_sleep_and_retry_attempts)
         rospy.set_param('sleep_time', sleep_time)
-        
+
         self.nav_stat=None
-        
-        
+
+
     def execute(self, userdata):
         max_sleep_and_retry_attempts=rospy.get_param('max_sleep_and_retry_attempts', 1)
         sleep_time=rospy.get_param('sleep_time', 5)
-        
-        if userdata.n_nav_fails<=max_sleep_and_retry_attempts:            
+
+        if userdata.n_nav_fails<=max_sleep_and_retry_attempts:
             self.nav_stat=MonitoredNavEventClass()
             if userdata.n_nav_fails==1:
                 self.nav_stat.initialize(recovery_mechanism="nav_sleep_and_retry", log_costmaps=True)
             else:
                 self.nav_stat.initialize(recovery_mechanism="nav_sleep_and_retry", log_costmaps=False)
-            
-            
+
+
             for i in range(0,sleep_time):
                 if self.preempt_requested():
                     self.service_preempt(userdata.n_nav_fails)
                     return 'preempted'
                 rospy.sleep(1)
-        
-                
+
+
             self.nav_stat.finalize(was_helped=False,n_tries=userdata.n_nav_fails)
             self.nav_stat.insert()
             return 'try_nav'
         else:
             return 'do_other_recovery'
 
-            
 
-            
+
+
     def service_preempt(self, n_tries):
         self.nav_stat.finalize(was_helped=False,n_tries=n_tries)
         self.nav_stat.insert()
@@ -78,23 +78,23 @@ class ClearCostmaps(smach.State):
 
         self.clear_costmaps=rospy.ServiceProxy('/move_base/clear_costmaps', Empty)
         self.path_finder=rospy.ServiceProxy('/move_base/make_plan', GetPlan)
-        
+
         self.nav_stat=None
-        
-        
+
+
     def execute(self, userdata):
         max_standalone_clear_attempts=rospy.get_param('max_standalone_clear_attempts', 1)
         wait_for_clearance_time=rospy.get_param('wait_for_clearance_time', 5)
-        
+
         self.nav_stat=MonitoredNavEventClass()
         self.nav_stat.initialize(recovery_mechanism="nav_clear_costmap")
-        
+
         for i in range(0,wait_for_clearance_time):
             if self.preempt_requested():
                 self.service_preempt(userdata.n_nav_fails)
                 return 'preempted'
             rospy.sleep(1)
-        
+
         try:
             self.clear_costmaps()
             current_pose=rospy.wait_for_message('/robot_pose', Pose, timeout=10)
@@ -102,20 +102,20 @@ class ClearCostmaps(smach.State):
         except Exception, e:
             rospy.logwarn("Issue clearing costmaps.")
             return 'do_other_recovery'
-        
-        
+
+
         if self.preempt_requested():
             self.service_preempt(userdata.n_nav_fails)
             return 'preempted'
-            
+
         self.nav_stat.finalize(was_helped=False,n_tries=userdata.n_nav_fails)
         self.nav_stat.insert()
-        
+
         if len(plan.plan.poses)==0 or userdata.n_nav_fails>max_standalone_clear_attempts:
             return 'do_other_recovery'
         else:
             return 'try_nav'
-            
+
     def service_preempt(self, n_tries):
         self.nav_stat.finalize(was_helped=False,n_tries=n_tries)
         self.nav_stat.insert()
@@ -129,50 +129,50 @@ class Backtrack(smach.State):
                              input_keys=['goal','n_nav_fails'],
                              output_keys=['goal','n_nav_fails'],
                              )
-                             
-        self.nav_stat=None
-        
-        self.speaker=actionlib.SimpleActionClient('/speak', maryttsAction)
-        got_server=self.speaker.wait_for_server(rospy.Duration(1))
-        while not got_server:
-            rospy.loginfo("Backtrack behaviour is waiting for marytts action...")
-            got_server=self.speaker.wait_for_server(rospy.Duration(1))
-            if rospy.is_shutdown():
-                return
-        
-        rospy.loginfo("Backtrack behaviour got marytts action")
-        self.speech="I am stuck here, so I will start moving backwards. Please get out of the way."
 
-        rospy.set_param('max_backtrack_attempts', max_backtrack_attempts)   
+        self.nav_stat=None
+
+        #self.speaker=actionlib.SimpleActionClient('/speak', maryttsAction)
+        #got_server=self.speaker.wait_for_server(rospy.Duration(1))
+        #while not got_server:
+        #    rospy.loginfo("Backtrack behaviour is waiting for marytts action...")
+        #    got_server=self.speaker.wait_for_server(rospy.Duration(1))
+        #    if rospy.is_shutdown():
+        #        return
+
+        #rospy.loginfo("Backtrack behaviour got marytts action")
+        #self.speech="I am stuck here, so I will start moving backwards. Please get out of the way."
+
+        rospy.set_param('max_backtrack_attempts', max_backtrack_attempts)
         rospy.set_param('backtrack_meters_back', backtrack_meters_back)
         self.backtrack_client = actionlib.SimpleActionClient('/do_backtrack', BacktrackAction)
         got_server=self.backtrack_client.wait_for_server(rospy.Duration(1))
-        while not got_server:   
+        while not got_server:
             rospy.loginfo("Backtrack recovery state is waiting for backtrack action to start...")
             got_server=self.backtrack_client.wait_for_server(rospy.Duration(1))
             if rospy.is_shutdown():
                 return
-        rospy.loginfo("Backtrack recovery state initialized") 
-        
+        rospy.loginfo("Backtrack recovery state initialized")
+
 
     def execute(self, userdata):
-        
-        max_backtrack_attempts=rospy.get_param('max_backtrack_attempts',3)     
+
+        max_backtrack_attempts=rospy.get_param('max_backtrack_attempts',3)
         backtrack_meters_back=rospy.get_param('backtrack_meters_back',0.8)
-        
+
         if self.preempt_requested():
             self.service_preempt()
             return 'preempted'
-        
+
         if userdata.n_nav_fails > max_backtrack_attempts:
             return 'failure'
-            
+
         self.nav_stat=MonitoredNavEventClass()
         self.nav_stat.initialize(recovery_mechanism="nav_backtrack")
-        
-        self.speaker.send_goal(maryttsGoal(text=self.speech))
-        rospy.sleep(2)
-            
+
+        #self.speaker.send_goal(maryttsGoal(text=self.speech))
+        #rospy.sleep(2)
+
         backtrack_goal = BacktrackGoal()
         backtrack_goal.meters_back = backtrack_meters_back
         self.backtrack_client.send_goal(backtrack_goal)
@@ -195,13 +195,13 @@ class Backtrack(smach.State):
         if status == GoalStatus.SUCCEEDED:
             return 'succeeded'
         return 'failure'
-    
+
     def service_preempt(self):
         self.backtrack_client.cancel_all_goals()
         smach.State.service_preempt(self)
-        
-        
-   
+
+
+
 class Help(smach.State):
     def __init__(self, wait_for_nav_help_timeout=40, wait_for_nav_help_finished=60):
         smach.State.__init__(self,
@@ -209,7 +209,7 @@ class Help(smach.State):
                              # incoming data from the move_base action state,
                              # because it is not possible for this recovery
                              # behaviour to check if it was succeeded
-                             outcomes=['recovered_with_help', 'recovered_without_help','not_recovered_with_help', 'not_recovered_without_help', 'preempted'],   
+                             outcomes=['recovered_with_help', 'recovered_without_help','not_recovered_with_help', 'not_recovered_without_help', 'preempted'],
                              input_keys=['goal','n_nav_fails'],
                              output_keys=['goal','n_nav_fails'],
                              )
@@ -217,32 +217,32 @@ class Help(smach.State):
         rospy.set_param('wait_for_nav_help_timeout', wait_for_nav_help_timeout)
         rospy.set_param('wait_for_nav_help_finished', wait_for_nav_help_finished)
         self.nav_stat=None
-            
+
         self.enable_motors= rospy.ServiceProxy('enable_motors', EnableMotors)
-               
+
         self.being_helped=False
         self.help_finished=False
-            
+
         self.ask_help_srv=rospy.ServiceProxy('/monitored_navigation/human_help', AskHelp)
         self.service_msg=AskHelpRequest()
         self.service_msg.failed_component='navigation'
-            
+
         self.help_offered_service_name='nav_help_offered'
         self.help_offered_monitor=rospy.Service('/monitored_navigation/'+self.help_offered_service_name, Empty, self.help_offered_cb)
-            
+
         self.help_finished_service_name="nav_help_finished"
         self.help_done_monitor=rospy.Service('/monitored_navigation/'+self.help_finished_service_name, Empty, self.help_finished_cb)
-       
+
 
     def help_offered_cb(self, req):
         self.being_helped=True
         return []
-    
+
     def help_finished_cb(self, req):
         self.being_helped=False
         self.help_finished=True
         return []
-        
+
 
     def ask_help(self):
         try:
@@ -252,15 +252,15 @@ class Help(smach.State):
 
 
     def execute(self, userdata):
-        
+
         wait_for_nav_help_timeout=rospy.get_param('wait_for_nav_help_timeout',40)
         wait_for_nav_help_finished=rospy.get_param('wait_for_nav_help_finished',60)
-        
-        
+
+
         self.nav_stat=MonitoredNavEventClass()
         self.nav_stat.initialize(recovery_mechanism="nav_help_recovery")
-            
-        if self.preempt_requested(): 
+
+        if self.preempt_requested():
             self.service_preempt(userdata.n_nav_fails)
             return 'preempted'
 
@@ -276,24 +276,24 @@ class Help(smach.State):
                 return 'preempted'
             if self.being_helped:
                 break
-            rospy.sleep(1)                   
+            rospy.sleep(1)
         if self.being_helped:
             self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED
             self.service_msg.interaction_service=self.help_finished_service_name
             self.ask_help()
             for i in range(0,wait_for_nav_help_finished):
-                self.enable_motors(False) 
+                self.enable_motors(False)
                 if self.help_finished:
                     break
-                rospy.sleep(1)     
+                rospy.sleep(1)
                 if self.preempt_requested():
                     self.service_preempt(userdata.n_nav_fails)
-                    return 'preempted' 
-                
-    
+                    return 'preempted'
+
+
         if self.preempt_requested():
             self.service_preempt(userdata.n_nav_fails)
-            return 'preempted'  
+            return 'preempted'
 
         if self.being_helped or self.help_finished:
             self.finish_execution(userdata.n_nav_fails)
@@ -305,7 +305,7 @@ class Help(smach.State):
 
 
     def finish_execution(self, n_tries):
-        self.enable_motors(True) 
+        self.enable_motors(True)
         self.service_msg.interaction_status=AskHelpRequest.HELP_FINISHED
         self.service_msg.interaction_service='none'
         self.ask_help()
@@ -313,12 +313,8 @@ class Help(smach.State):
         self.being_helped=False
         self.help_finished=False
         self.nav_stat.insert()
-    
-    
+
+
     def service_preempt(self, n_tries):
         self.finish_execution(n_tries)
         smach.State.service_preempt(self)
-            
-
- 
-
