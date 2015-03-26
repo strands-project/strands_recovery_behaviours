@@ -3,6 +3,7 @@
 import rospy
 
 from nav_msgs.msg import Path
+from nav_msgs.srv import *
 from move_base_msgs.msg import *
 import dynamic_reconfigure.client
 from scitos_ptu.msg import *
@@ -33,6 +34,11 @@ class BacktrackServer(object):
         self.move_base_action_client.wait_for_server()
         rospy.loginfo("Done")
         self.move_base_reconfig_client = dynamic_reconfigure.client.Client('/move_base/DWAPlannerROS')
+
+        # get planner service
+        rospy.loginfo("Waiting for move_base planner service...")
+        rospy.wait_for_service('/move_base/NavfnROS/make_plan')
+        self.planner = rospy.ServiceProxy('/move_base/NavfnROS/make_plan', GetPlan)
 
         # get mary_tts action client
         self.speaker = actionlib.SimpleActionClient('/speak', maryttsAction)
@@ -83,6 +89,7 @@ class BacktrackServer(object):
     def pose_cb(self, msg):
         self.x = msg.position.x
         self.y = msg.position.y
+        self.pose = msg
         if self.first_pose:
             self.first_x = self.x
             self.first_y = self.y
@@ -178,9 +185,24 @@ class BacktrackServer(object):
         move_goal.target_pose.header.frame_id = meter_back.previous_pose.header.frame_id
         #rospy.sleep(rospy.Duration.from_sec(1))
         #print movegoal
+
+        if not self.first_pose:
+            try:
+                plan_request = GetPlanRequest()
+                plan_request.start.pose = self.pose
+                plan_request.start.header.frame_id = '/map'
+                plan_request.goal.pose = move_goal.target_pose
+                plan_request.goal.header.frame_id = '/map'
+                resp = self.planner(plan_request)
+                if len(resp.plan.poses) > 0:
+                    self.speaker.send_goal(maryttsGoal(text=self.speech))
+                    rospy.sleep(2)
+            except rospy.ServiceException as exc:
+                print("Service did not process request: " + str(exc))
+
         self.move_base_action_client.send_goal(move_goal)
         status = self.move_base_action_client.get_state()
-        did_speak = False
+        #did_speak = False
         while status == GoalStatus.PENDING or status == GoalStatus.ACTIVE:
             status = self.move_base_action_client.get_state()
             if self.server.is_preempt_requested():
@@ -198,13 +220,13 @@ class BacktrackServer(object):
                 pose_sub.unregister()
                 self.server.set_aborted()
                 return
-            if not did_speak:
-                 last_plan_recent = rospy.get_rostime() - self.last_global_plan_time < rospy.Duration.from_sec(1)
-                 last_plan_good = len(self.global_plan.poses) > 0
-                 if last_plan_recent and last_plan_good:
-                     self.speaker.send_goal(maryttsGoal(text=self.speech))
-                     did_speak = True
-                     #rospy.sleep(2)
+            #if not did_speak:
+            #     last_plan_recent = rospy.get_rostime() - self.last_global_plan_time < rospy.Duration.from_sec(1)
+            #     last_plan_good = len(self.global_plan.poses) > 0
+            #     if last_plan_recent and last_plan_good:
+            #         self.speaker.send_goal(maryttsGoal(text=self.speech))
+            #         did_speak = True
+            #         #rospy.sleep(2)
 
             self.move_base_action_client.wait_for_result(rospy.Duration(0.2))
 
