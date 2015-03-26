@@ -191,8 +191,7 @@ class BacktrackServer(object):
                 plan_request = GetPlanRequest()
                 plan_request.start.pose = self.pose
                 plan_request.start.header.frame_id = '/map'
-                plan_request.goal.pose = move_goal.target_pose
-                plan_request.goal.header.frame_id = '/map'
+                plan_request.goal = move_goal.target_pose
                 resp = self.planner(plan_request)
                 if len(resp.plan.poses) > 0:
                     self.speaker.send_goal(maryttsGoal(text=self.speech))
