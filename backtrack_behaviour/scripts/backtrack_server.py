@@ -195,7 +195,7 @@ class BacktrackServer(object):
                 resp = self.planner(plan_request)
                 if len(resp.plan.poses) > 0:
                     self.speaker.send_goal(maryttsGoal(text=self.speech))
-                    rospy.sleep(2)
+                    rospy.sleep(5)
             except rospy.ServiceException as exc:
                 print("Service did not process request: " + str(exc))
 
