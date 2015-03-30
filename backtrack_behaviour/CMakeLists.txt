@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   std_srvs
-  dynamic_reconfigure 
+  dynamic_reconfigure
   scitos_msgs
   scitos_ptu
   sensor_msgs
@@ -21,6 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   dynamic_reconfigure
   cmake_modules
+  mary_tts
 )
 
 ## System dependencies are found with CMake's conventions

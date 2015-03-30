@@ -2,6 +2,9 @@
 Changelog for package strands_human_help
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.12 (2015-03-24)
+-------------------
+
 0.0.10 (2014-11-23)
 -------------------
 * Changing help speech to explicitely tell people to look to the robot's screen

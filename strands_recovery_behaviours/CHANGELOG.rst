@@ -2,6 +2,12 @@
 Changelog for package strands_recovery_behaviours
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.12 (2015-03-24)
+-------------------
+* Adding walking_group_recovery to meta package
+  Closes `#39 <https://github.com/strands-project/strands_recovery_behaviours/issues/39>`_
+* Contributors: Christian Dondrup
+
 0.0.10 (2014-11-23)
 -------------------
 * adding twitter help - always for magnetic strip, once when nav or bumper fails 20 times in a row
