@@ -16,19 +16,6 @@ class RecoverStuckOnCarpetNoHelp(RecoverStateMachine):
                                                 'recovered_without_help':'recovered_without_help',
                                                 'preempted':'preempted',
                                                 'not_active':'not_recovered_without_help'})
-
-class MagneticState(RecoverState):
-    def __init__(self,
-                 name="recover_magnetic_strip",
-                 is_active=True,
-                 max_recovery_attempts=float("inf")):
-                
-        RecoverState.__init__(self,
-                        name=name,
-                        outcomes=['help_done', 'preempted'],
-                        is_active=is_active,
-                        max_recovery_attempts=max_recovery_attempts
-                        )
    
 class CarpetState(RecoverState):
     def __init__(self,
@@ -46,7 +33,7 @@ class CarpetState(RecoverState):
         self.vel_cmd = Twist()
         
 
-    def execute(self,userdata):
+    def active_execute(self,userdata):
         if self.preempt_requested(): 
             self.service_preempt()
             return 'preempted'

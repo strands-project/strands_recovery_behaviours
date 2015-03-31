@@ -51,7 +51,7 @@ class MagneticState(RecoverState):
         except rospy.ServiceException, e:
             rospy.logwarn("No means of asking for human help available.")
 
-    def execute(self, userdata):
+    def active_execute(self, userdata):
         self.barrier_stopped=True
         i=1
         while self.barrier_stopped:
