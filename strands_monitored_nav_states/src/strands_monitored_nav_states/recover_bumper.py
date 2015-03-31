@@ -12,9 +12,9 @@ from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
 
 
 class RecoverBumper(RecoverStateMachine):
-    def __init__(self,max_bumper_recovery_attempts=float("inf")):
+    def __init__(self,max_recovery_attempts=float("inf")):
         RecoverStateMachine.__init__(self)
-        self.bumper_help=BumperHelp(max_bumper_recovery_attempts)
+        self.bumper_help=BumperHelp(max_recovery_attempts=max_recovery_attempts)
         
         with self:
             smach.StateMachine.add('BUMPER_HELP',
@@ -23,13 +23,14 @@ class RecoverBumper(RecoverStateMachine):
                                                 'not_recovered_without_help':'not_recovered_without_help',
                                                 'recovered_with_help':'recovered_with_help',
                                                 'not_recovered_with_help':'not_recovered_with_help',
-                                                'preempted':'preempted'})
+                                                'preempted':'preempted',
+                                                'not_active':'not_recovered_without_help'})
  
 class BumperHelp(RecoverState):
     def __init__(self,
                  name="recover_bumper",
                  is_active=True,
-                 max_recovery_attempts=float(inf),
+                 max_recovery_attempts=float("inf"),
                  wait_for_bumper_help_timeout=40,
                  wait_for_bumper_help_finished=60):
         RecoverState.__init__(self,
@@ -77,78 +78,73 @@ class BumperHelp(RecoverState):
     def bumper_monitor_cb(self, msg):
         self.bumper_pressed = msg.bumper_pressed
 
-
-
-    def active_execute(self, userdata):
-        
+    def active_execute(self, userdata):        
         wait_for_bumper_help_timeout=rospy.get_param('wait_for_bumper_help_timeout',40)
-        wait_for_bumper_help_finished=rospy.get_param('wait_for_bumper_help_finished',60)
-
-            
+        wait_for_bumper_help_finished=rospy.get_param('wait_for_bumper_help_finished',60)          
         if self.preempt_requested(): 
             self.service_preempt()
-            return 'preempted'
-        
-        
+            return 'preempted'        
         self.service_msg.n_fails=self.n_tries
-        if not self.bumper_pressed:
-            self.service_msg.interaction_status=AskHelpRequest.HELP_FINISHED
-            self.service_msg.interaction_service='none'
-            self.ask_help()
-            if self.being_helped or self.help_finished:
+        while self.bumper_pressed:       
+            if self.n_tries>max_bumper_recovery_attempts:
                 self.finish_execution()
-                return "recovered_with_help"
+                if self.being_helped or self.help_finished:                   
+                    return "not_recovered_with_help"
+                else:
+                    return "not_recovered_without_help"
             else:
-                self.finish_execution()
-                return "recovered_without_help"
-        elif self.n_tries>max_bumper_recovery_attempts:
-            self.service_msg.interaction_status=AskHelpRequest.HELP_FAILED
-            self.service_msg.interaction_service='none'
-            self.ask_help()
-            if self.being_helped or self.help_finished:
-                self.finish_execution()
-                return "not_recovered_with_help"
-            else:
-                self.finish_execution()
-                return "not_recovered_without_help"
-        else:
-            if self.preempt_requested():
-                self.service_preempt()
-                return 'preempted'
-            self.service_msg.interaction_status=AskHelpRequest.ASKING_HELP
-            self.service_msg.interaction_service=self.help_offered_service_name
-            self.ask_help()
-            for i in range(0,wait_for_bumper_help_timeout):    
-                if self.being_helped:
-                    break
                 if self.preempt_requested():
                     self.service_preempt()
                     return 'preempted'
-                if not self.bumper_pressed:
-                    return "try_restart"
-                rospy.sleep(1)
-            if self.being_helped:
-                self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED
-                self.service_msg.interaction_service=self.help_finished_service_name
+                self.service_msg.interaction_status=AskHelpRequest.ASKING_HELP
+                self.service_msg.interaction_service=self.help_offered_service_name
                 self.ask_help()
-                for i in range(0,wait_for_bumper_help_finished):
-                    self.enable_motors(False)
-                    if self.help_finished:
+                for i in range(0,wait_for_bumper_help_timeout):    
+                    if self.being_helped:
                         break
+                    if self.preempt_requested():
+                        self.service_preempt()
+                        return 'preempted'
+                    if not self.bumper_pressed:
+                        return self.recover_succeeded()
                     rospy.sleep(1)
-                self.being_helped=False
-            return "try_restart"
-                    
+                if self.being_helped:
+                    self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED
+                    self.service_msg.interaction_service=self.help_finished_service_name
+                    self.ask_help()
+                    for i in range(0,wait_for_bumper_help_finished):
+                        self.enable_motors(False)
+                        if self.help_finished:
+                            if self.bumper_pressed:
+                                self.service_msg.interaction_status=AskHelpRequest.HELP_FAILED
+                                self.service_msg.interaction_service='none'
+                                self.ask_help()
+                            break
+                        rospy.sleep(1)
+                    self.being_helped=False
+        return self.recover_succeeded()
+        
+    
+    def recover_succeeded(self):
+        self.service_msg.interaction_status=AskHelpRequest.HELP_FINISHED
+        self.service_msg.interaction_service='none'
+        self.ask_help()        
+        self.finish_execution()
+        if self.being_helped or self.help_finished:
+            return "recovered_with_help"
+        else:
+            return "recovered_without_help"
+    
     def finish_execution(self):
         self.enable_motors(True) 
-        self.nav_stat.finalize(self.being_helped or self.help_finished,self.n_tries)
+        self.was_helped=self.being_helped or self.help_finished
         self.being_helped=False
         self.help_finished=False
-        self.nav_stat.insert()
         self.n_tries=0
     
     def service_preempt(self):
         self.finish_execution()
+        self.was_helped=False
         self.service_msg.interaction_status=AskHelpRequest.HELP_FAILED
         self.service_msg.interaction_service='none'
         self.ask_help()

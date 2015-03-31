@@ -21,6 +21,8 @@ class SleepAndRetry(RecoverState):
         RecoverState.__init__(self,
                              name=name,
                              outcomes=['try_nav',  'preempted'],
+                             input_keys=['goal','n_fails'],
+                             output_keys=['goal','n_fails'],
                              is_active=is_active,
                              max_recovery_attempts=max_recovery_attempts
                              )
@@ -45,6 +47,8 @@ class Backtrack(RecoverState):
         RecoverState.__init__(self,
                              name=name,
                              outcomes=['succeeded', 'failure', 'preempted'],
+                             input_keys=['goal','n_fails'],
+                             output_keys=['goal','n_fails'],
                              is_active=is_active,
                              max_recovery_attempts=max_recovery_attempts
                              )
@@ -128,7 +132,6 @@ class Help(RecoverState):
         self.help_finished_service_name="nav_help_finished"
         self.help_done_monitor=rospy.Service('/monitored_navigation/'+self.help_finished_service_name, Empty, self.help_finished_cb)
 
-
     def help_offered_cb(self, req):
         self.being_helped=True
         return []
@@ -181,12 +184,11 @@ class Help(RecoverState):
         if self.preempt_requested():
             self.service_preempt()
             return 'preempted' 
-
-        if self.being_helped or self.help_finished:
-            self.finish_execution()
+        self.was_helped=self.being_helped or self.help_finished
+        self.finish_execution()
+        if self.was_helped:
             return 'recovered_with_help'
         else:
-            self.finish_execution()
             return 'recovered_without_help'
 
     def finish_execution(self):
@@ -194,7 +196,6 @@ class Help(RecoverState):
         self.service_msg.interaction_status=AskHelpRequest.HELP_FINISHED
         self.service_msg.interaction_service='none'
         self.ask_help()
-        self.was_helped=self.being_helped or self.help_finished
         self.being_helped=False
         self.help_finished=False
     

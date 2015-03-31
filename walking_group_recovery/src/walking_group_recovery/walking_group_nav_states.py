@@ -8,7 +8,7 @@ from walking_group_recovery_state import WalkingGroupRecovery
 
 class WalkingGroupNav(RecoverStateMachine):
     def __init__(self):
-        RecoverStateMachine.__init__(self,input_keys=['goal','n_nav_fails'],output_keys=['goal','n_nav_fails'])
+        RecoverStateMachine.__init__(self,input_keys=['goal','n_fails'],output_keys=['goal','n_fails'])
         self.sleep_and_retry=SleepAndRetry()
         self.walking_help = WalkingGroupRecovery()
         with self:
@@ -23,7 +23,8 @@ class WalkingGroupNav(RecoverStateMachine):
                                                 'recovered_without_help':'recovered_without_help',
                                                 'not_recovered_with_help':'not_recovered_with_help', 
                                                 'not_recovered_without_help':'not_recovered_without_help', 
-                                                'preempted':'preempted'})
+                                                'preempted':'preempted',
+                                                'not_active':'not_recovered_without_help'})
 
 
 
