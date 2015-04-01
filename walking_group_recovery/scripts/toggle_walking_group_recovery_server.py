@@ -3,6 +3,7 @@
 import rospy
 from actionlib_msgs.msg import *
 import actionlib
+from strands_navigation_msgs.msg import DynClassLoaderDef
 from strands_navigation_msgs.srv import *
 from walking_group_recovery.srv import *
 
@@ -21,7 +22,7 @@ class ToggleWalkingGroupRecoveryServer(object):
             package = 'strands_monitored_nav_states'
             recovery_file = 'recover_nav'
             recovery_class = 'RecoverNav'
-        s(package, recovery_file, recovery_class)
+        s(DynClassLoaderDef(package, recovery_file, recovery_class))
         return ToggleWalkingGroupRecoveryResponse(package, recovery_file, recovery_class)
         
         

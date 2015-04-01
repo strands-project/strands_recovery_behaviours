@@ -1,41 +1,42 @@
 import rospy
-
 import smach
 from monitored_navigation.recover_state_machine import RecoverStateMachine
-
+from monitored_navigation.recover_state import RecoverState
 from geometry_msgs.msg import Twist
 
-from mongo_logger import MonitoredNavEventClass
-
-
-
 class RecoverStuckOnCarpetNoHelp(RecoverStateMachine):
-    def __init__(self):
+    def __init__(self,max_recovery_attempts=float("inf")):
         RecoverStateMachine.__init__(self)
-        self.state=CarpetState()
+        self.state=CarpetState(max_recovery_attempts=max_recovery_attempts)
         
         with self:
             smach.StateMachine.add('CARPET_STATE',
                                    self.state,
                                    transitions={'preempted':'preempted',
                                                 'recovered_without_help':'recovered_without_help',
-                                                'preempted':'preempted'})
+                                                'preempted':'preempted',
+                                                'not_active':'not_recovered_without_help'})
    
-class CarpetState(smach.State):
-    def __init__(self):
-        smach.State.__init__(self,
-            outcomes=['recovered_with_help', 'recovered_without_help','not_recovered_with_help', 'not_recovered_without_help', 'preempted'])
+class CarpetState(RecoverState):
+    def __init__(self,
+                 name="recover_stuck_on_carpet",
+                 is_active=True,
+                 max_recovery_attempts=float("inf")):
+        RecoverState.__init__(self,
+                        name=name,
+                        outcomes=['recovered_with_help', 'recovered_without_help','not_recovered_with_help', 'not_recovered_without_help', 'preempted'],
+                        is_active=is_active,
+                        max_recovery_attempts=max_recovery_attempts
+                        )
+        self.was_helped=False
         self.vel_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
         self.vel_cmd = Twist()
         
 
-    def execute(self,userdata):
+    def active_execute(self,userdata):
         if self.preempt_requested(): 
             self.service_preempt()
             return 'preempted'
-        
-        self.nav_stat=MonitoredNavEventClass()
-        self.nav_stat.initialize(recovery_mechanism="carpet_recovery")
             
         #small forward vel to unstuck robot
         self.vel_cmd.linear.x=0.8
@@ -49,10 +50,7 @@ class CarpetState(smach.State):
         self.vel_cmd.linear.x=0.0
         self.vel_cmd.angular.z=0.0
         self.vel_pub.publish(self.vel_cmd)
-        
-        self.nav_stat.finalize(False,0)
-        self.nav_stat.insert()
-        
+                
         if self.preempt_requested(): 
             self.service_preempt()
             return 'preempted'

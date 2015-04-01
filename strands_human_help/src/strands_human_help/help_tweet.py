@@ -14,7 +14,7 @@ class HelpTweet(UIHelper):
 
         self.twitter=actionlib.SimpleActionClient('strands_image_tweets', GrabImageThenTweetAction)
         self.got_server=self.twitter.wait_for_server(rospy.Duration(1))
-        countdown=10
+        countdown=1
         while not self.got_server and countdown>0:
             rospy.loginfo("Help via twitter is waiting for grab image then tweet action..." + str(countdown))
             self.got_server=self.twitter.wait_for_server(rospy.Duration(1))

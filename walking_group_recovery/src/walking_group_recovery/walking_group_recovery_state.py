@@ -1,7 +1,7 @@
 import rospy
 import smach
 
-from strands_monitored_nav_states.mongo_logger import MonitoredNavEventClass
+from monitored_navigation.recover_state import RecoverState
 
 from nav_msgs.srv import GetPlan, GetPlanRequest
 from geometry_msgs.msg import Pose, PoseStamped
@@ -26,21 +26,20 @@ from mongodb_media_server import MediaClient
 
 from random import randint
 
-class WalkingGroupRecovery(smach.State):
-    def __init__(self, wait_for_nav_help_timeout=40, wait_for_nav_help_finished=60):
-        smach.State.__init__(self,
-                             # we need the number of move_base fails as
-                             # incoming data from the move_base action state,
-                             # because it is not possible for this recovery
-                             # behaviour to check if it was succeeded
+
+class WalkingGroupRecovery(RecoverState):
+    def __init__(self, name="waling_group_help", is_active=True, max_recovery_attempts=float("inf"), wait_for_nav_help_timeout=40, wait_for_nav_help_finished=60):
+        RecoverState.__init__(self,
+                             name=name,
                              outcomes=['recovered_with_help', 'recovered_without_help','not_recovered_with_help', 'not_recovered_without_help', 'preempted'],
-                             input_keys=['goal','n_nav_fails'],
-                             output_keys=['goal','n_nav_fails'],
+                             input_keys=['goal','n_fails'],
+                             output_keys=['goal','n_fails'],
+                             is_active=is_active,
+                             max_recovery_attempts=max_recovery_attempts
                              )
 
         rospy.set_param('wait_for_nav_help_timeout', wait_for_nav_help_timeout)
         rospy.set_param('wait_for_nav_help_finished', wait_for_nav_help_finished)
-        self.nav_stat=None
 
         self.enable_motors= rospy.ServiceProxy('enable_motors', EnableMotors)
 
@@ -113,27 +112,21 @@ class WalkingGroupRecovery(smach.State):
         pos = randint(0, len(self.file_list)-1)
         return self.file_list[pos]
 
-    def execute(self, userdata):
-
+    def active_execute(self, userdata):
         wait_for_nav_help_timeout=rospy.get_param('wait_for_nav_help_timeout',40)
         wait_for_nav_help_finished=rospy.get_param('wait_for_nav_help_finished',60)
-
-
-        self.nav_stat=MonitoredNavEventClass()
-        self.nav_stat.initialize(recovery_mechanism="nav_help_recovery")
-
         if self.preempt_requested():
-            self.service_preempt(userdata.n_nav_fails)
+            self.service_preempt()
             return 'preempted'
 
-        self.service_msg.n_fails=userdata.n_nav_fails
+        self.service_msg.n_fails=self.n_tries
         self.service_msg.interaction_status=AskHelpRequest.ASKING_HELP
         self.service_msg.interaction_service=self.help_offered_service_name
         self.ask_help()
 
         for i in range(0,wait_for_nav_help_timeout):
             if self.preempt_requested():
-                self.service_preempt(userdata.n_nav_fails)
+                self.service_preempt()
                 return 'preempted'
             if self.being_helped:
                 break
@@ -154,37 +147,32 @@ class WalkingGroupRecovery(smach.State):
                     break
                 rospy.sleep(1)
                 if self.preempt_requested():
-                    self.service_preempt(userdata.n_nav_fails)
-                    pygame.mixer.music.stop()
+                    self.service_preempt()
                     return 'preempted'
 
 
         if self.preempt_requested():
-            self.service_preempt(userdata.n_nav_fails)
-            pygame.mixer.music.stop()
+            self.service_preempt()
             return 'preempted'
 
-        if self.being_helped or self.help_finished:
-            self.finish_execution(userdata.n_nav_fails)
-            pygame.mixer.music.stop()
+        self.was_helped=self.being_helped or self.help_finished
+        self.finish_execution()
+        if self.was_helped:                       
             return 'recovered_with_help'
         else:
-            self.finish_execution(userdata.n_nav_fails)
-            pygame.mixer.music.stop()
             return 'recovered_without_help'
 
 
-    def finish_execution(self, n_tries):
+    def finish_execution(self):
+        pygame.mixer.music.stop()
         self.enable_motors(True)
         self.service_msg.interaction_status=AskHelpRequest.HELP_FINISHED
         self.service_msg.interaction_service='none'
         self.ask_help()
-        self.nav_stat.finalize(self.being_helped or self.help_finished,n_tries)
         self.being_helped=False
         self.help_finished=False
-        self.nav_stat.insert()
 
 
-    def service_preempt(self, n_tries):
-        self.finish_execution(n_tries)
+    def service_preempt(self):
+        self.finish_execution()
         smach.State.service_preempt(self)
