@@ -135,8 +135,9 @@ class WalkingGroupRecovery(RecoverState):
         #paths = roslib.packages.find_resource('walking_group_recovery', 'good_bad_ugly.mp3')
         #pygame.mixer.music.load(paths[0])
         #pygame.mixer.music.play()
-        self.player = PyGamePlayer(0.2, 1.0, 0.5, frequency=44100)
-        self.player.play_music(self.get_random_song(), blocking=False)
+        if self.file_list is not None and len(self.file_list) > 0:
+            self.player = PyGamePlayer(0.2, 1.0, 0.5, frequency=44100)
+            self.player.play_music(self.get_random_song(), blocking=False)
         if self.being_helped:
             self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED
             self.service_msg.interaction_service=self.help_finished_service_name
@@ -157,7 +158,7 @@ class WalkingGroupRecovery(RecoverState):
 
         self.was_helped=self.being_helped or self.help_finished
         self.finish_execution()
-        if self.was_helped:                       
+        if self.was_helped:
             return 'recovered_with_help'
         else:
             return 'recovered_without_help'
