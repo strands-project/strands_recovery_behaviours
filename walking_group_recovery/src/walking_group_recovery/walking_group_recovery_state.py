@@ -3,15 +3,7 @@ import smach
 
 from monitored_navigation.recover_state import RecoverState
 
-from nav_msgs.srv import GetPlan, GetPlanRequest
-from geometry_msgs.msg import Pose, PoseStamped
-
-import actionlib
-from actionlib_msgs.msg import GoalStatus
-from backtrack_behaviour.msg import BacktrackAction, BacktrackGoal
-from mary_tts.msg import maryttsAction, maryttsGoal
-
-from os.path import isfile, join, splitext, exists, expanduser
+from os.path import join, exists, expanduser
 from os import makedirs
 
 from std_srvs.srv import Empty
@@ -19,7 +11,6 @@ from scitos_msgs.srv import EnableMotors
 from strands_navigation_msgs.srv import AskHelp, AskHelpRequest
 
 import pygame
-import roslib
 
 from pygame_managed_player.pygame_player import PyGamePlayer
 from mongodb_media_server import MediaClient
@@ -28,7 +19,7 @@ from random import randint
 
 
 class WalkingGroupRecovery(RecoverState):
-    def __init__(self, name="waling_group_help", is_active=True, max_recovery_attempts=float("inf"), wait_for_nav_help_timeout=40, wait_for_nav_help_finished=60):
+    def __init__(self, name="walking_group_help", is_active=True, max_recovery_attempts=float("inf"), wait_for_nav_help_timeout=40, wait_for_nav_help_finished=60):
         RecoverState.__init__(self,
                              name=name,
                              outcomes=['recovered_with_help', 'recovered_without_help','not_recovered_with_help', 'not_recovered_without_help', 'preempted'],
@@ -56,8 +47,11 @@ class WalkingGroupRecovery(RecoverState):
         self.help_finished_service_name="walking_help_finished"
         self.help_done_monitor=rospy.Service('/monitored_navigation/'+self.help_finished_service_name, Empty, self.help_finished_cb)
 
-        self.music_set = 'walking_group_recovery'
-        self.audio_folder = join(expanduser('~'), '.ros', 'walking_group_recovery')
+        self.music_set      = rospy.get_param("/walking_group_help/music_set", "walking_group_recovery")
+        self.audio_priority = rospy.get_param("/walking_group_help/audio_priority", 0.9)
+        self.min_volume     = rospy.get_param("/walking_group_help/min_volume", 0.2)
+        self.max_volume     = rospy.get_param("/walking_group_help/max_volume", 1.0)
+        self.audio_folder   = join(expanduser('~'), '.ros', 'walking_group_recovery')
 
         hostname = rospy.get_param('mongodb_host')
         port = rospy.get_param('mongodb_port')
@@ -136,7 +130,7 @@ class WalkingGroupRecovery(RecoverState):
         #pygame.mixer.music.load(paths[0])
         #pygame.mixer.music.play()
         if self.file_list is not None and len(self.file_list) > 0:
-            self.player = PyGamePlayer(0.2, 1.0, 0.5, frequency=44100)
+            self.player = PyGamePlayer(self.min_volume, self.max_volume, self.audio_priority, frequency=44100)
             self.player.play_music(self.get_random_song(), blocking=False)
         if self.being_helped:
             self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED
