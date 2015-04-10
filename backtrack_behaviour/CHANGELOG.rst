@@ -2,6 +2,14 @@
 Changelog for package backtrack_behaviour
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Extended the wait time a bit
+* Corrected message assignment
+* Changed to check if correct plan with service instead
+* Moved speaking from monitored nav states to backtrack, with check if it got a global plan
+* Contributors: Nils Bore, Rares Ambrus
+
 0.0.12 (2015-03-24)
 -------------------
 

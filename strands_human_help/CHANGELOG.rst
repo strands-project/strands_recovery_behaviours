@@ -2,6 +2,12 @@
 Changelog for package strands_human_help
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* only complain about lack of proper help when help was offered
+* first stuff to allow recover states to be deactivated
+* Contributors: Bruno Lacerda
+
 0.0.12 (2015-03-24)
 -------------------
 

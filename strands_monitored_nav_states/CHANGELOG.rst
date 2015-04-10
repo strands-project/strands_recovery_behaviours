@@ -2,6 +2,17 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* bug fixes+code clean
+* update recover states to be subclasses of new RecoverState - to allow on the fly enable/disable
+* Merge branch 'hydro-devel' of https://github.com/strands-project/strands_recovery_behaviours into hydro-devel
+  Conflicts:
+  strands_monitored_nav_states/src/strands_monitored_nav_states/recover_nav_states.py
+* Moved speaking from monitored nav states to backtrack, with check if it got a global plan
+* first stuff to allow recover states to be deactivated
+* Contributors: Bruno Lacerda, Nils Bore
+
 0.0.12 (2015-03-24)
 -------------------
 

@@ -2,6 +2,14 @@
 Changelog for package walking_group_recovery
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Using parameters to set audio priorities and volumes in walking group recovery
+* Not crashing if no files in data set
+* update recover states to be subclasses of new RecoverState - to allow on the fly enable/disable
+* update walking group toggle recovery service with new message typw
+* Contributors: Bruno Lacerda, Christian Dondrup, Nils Bore
+
 0.0.12 (2015-03-24)
 -------------------
 * Forgot to specify .ros
