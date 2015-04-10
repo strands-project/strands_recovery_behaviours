@@ -2,8 +2,8 @@
 Changelog for package backtrack_behaviour
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.13 (2015-04-10)
+-------------------
 * Extended the wait time a bit
 * Corrected message assignment
 * Changed to check if correct plan with service instead

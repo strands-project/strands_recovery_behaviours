@@ -2,8 +2,8 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.13 (2015-04-10)
+-------------------
 * bug fixes+code clean
 * update recover states to be subclasses of new RecoverState - to allow on the fly enable/disable
 * Merge branch 'hydro-devel' of https://github.com/strands-project/strands_recovery_behaviours into hydro-devel
