@@ -53,6 +53,9 @@ class WalkingGroupRecovery(RecoverState):
         self.max_volume     = rospy.get_param("/walking_group_help/max_volume", 1.0)
         self.audio_folder   = join(expanduser('~'), '.ros', 'walking_group_recovery')
 
+        print "Audio priority:"
+        print self.audio_priority
+
         hostname = rospy.get_param('mongodb_host')
         port = rospy.get_param('mongodb_port')
 
