@@ -92,7 +92,7 @@ class WalkingGroupRecovery(RecoverState):
         #paths = roslib.packages.find_resource('walking_group_recovery', 'good_bad_ugly.mp3')
         #pygame.mixer.music.load(paths[0])
         #pygame.mixer.music.play()
-        PlaySoundServiceRequest req(self.music_file)
+        req = PlaySoundServiceRequest(self.music_file)
         resp = self.sound_player_server(req)
         print ("Played sound: " + str(resp.file_found) + " with priority " + str(resp.audio_priority))
         if self.being_helped:

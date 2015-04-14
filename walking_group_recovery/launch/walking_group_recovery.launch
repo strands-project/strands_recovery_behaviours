@@ -12,15 +12,15 @@
 <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER)" user="$(arg user)" default="true"/>
 
 <node pkg="sound_player_server" type="sound_player.py" name="walking_group_player" output="screen" respawn="true">
-    <arg name="music_set" value="$(arg music_set)"/>
-    <arg name="audio_priority" value="$(arg audio_priority)"/>
-    <arg name="min_volume" value="$(arg min_volume)"/>
-    <arg name="max_volume" value="$(arg max_volume)"/>
+    <param name="music_set" value="$(arg music_set)"/>
+    <param name="audio_priority" value="$(arg audio_priority)"/>
+    <param name="min_volume" value="$(arg min_volume)"/>
+    <param name="max_volume" value="$(arg max_volume)"/>
 </node>
 
-<node pkg="walking_group_recovery" type="toggle_walking_group_recovery.py" name="toggle_walking_group_recovery" output="screen" respawn="true">
-    <arg name="sound_player_server" value="/walking_group_player/sound_player_service"/>
-    <arg name="music_file" value="$(arg music_file)"
+<node pkg="walking_group_recovery" type="toggle_walking_group_recovery_server.py" name="toggle_walking_group_recovery_server" output="screen" respawn="true">
+    <param name="sound_player_server" value="/walking_group_player/sound_player_service"/>
+    <param name="music_file" value="$(arg music_file)"/>
 </node>
 
 </launch>
