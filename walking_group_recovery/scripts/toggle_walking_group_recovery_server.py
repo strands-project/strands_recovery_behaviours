@@ -9,10 +9,8 @@ class ToggleWalkingGroupRecoveryServer(object):
     def __init__(self):
         rospy.init_node('toggle_walking_group_recovery_server')
         #Not too nice but don't know a different way of using params in recovery behaviour
-        rospy.set_param("/walking_group_help/music_set", rospy.get_param("~music_set", "walking_group_recovery"))
-        rospy.set_param("/walking_group_help/audio_priority", rospy.get_param("~audio_priority", 0.9))
-        rospy.set_param("/walking_group_help/min_volume", rospy.get_param("~min_volume", 0.2))
-        rospy.set_param("/walking_group_help/max_volume", rospy.get_param("~max_volume",1.0))
+        rospy.set_param("/walking_group_help/sound_player_server", rospy.get_param("~sound_player_server", "walking_group_player"))
+        rospy.set_param("/walking_group_help/music_file", rospy.get_param("~music_file", "nooo.mp3"))
         self.service = rospy.Service('toggle_walking_group_recovery', ToggleWalkingGroupRecovery, self.change_recovery)
 
     def change_recovery(self, req):
@@ -33,4 +31,3 @@ class ToggleWalkingGroupRecoveryServer(object):
 if __name__ == '__main__':
     server = ToggleWalkingGroupRecoveryServer()
     rospy.spin()
-

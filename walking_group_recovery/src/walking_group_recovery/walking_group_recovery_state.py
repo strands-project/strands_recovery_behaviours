@@ -14,6 +14,7 @@ import pygame
 
 from pygame_managed_player.pygame_player import PyGamePlayer
 from mongodb_media_server import MediaClient
+from sound_player_server.srv import PlaySoundService, PlaySoundServiceRequest
 
 from random import randint
 
@@ -47,44 +48,10 @@ class WalkingGroupRecovery(RecoverState):
         self.help_finished_service_name="walking_help_finished"
         self.help_done_monitor=rospy.Service('/monitored_navigation/'+self.help_finished_service_name, Empty, self.help_finished_cb)
 
-        self.music_set      = rospy.get_param("/walking_group_help/music_set", "walking_group_recovery")
-        self.audio_priority = rospy.get_param("/walking_group_help/audio_priority", 0.9)
-        self.min_volume     = rospy.get_param("/walking_group_help/min_volume", 0.2)
-        self.max_volume     = rospy.get_param("/walking_group_help/max_volume", 1.0)
-        self.audio_folder   = join(expanduser('~'), '.ros', 'walking_group_recovery')
+        self.sound_player_name = rospy.get_param("/walking_group_help/sound_player_server", "sound_player_server")
+        self.music_file = rospy.get_param("/walking_group_help/music_file", "nooo.mp3")
 
-        hostname = rospy.get_param('mongodb_host')
-        port = rospy.get_param('mongodb_port')
-
-        self.mc = MediaClient(hostname, port)
-        sets = self.mc.get_sets("Music")
-        object_id = None
-        for s in sets:
-            if s[0] == self.music_set:
-                object_id = s[2]
-
-        if object_id is None:
-            rospy.logwarn('Could not find any set in database matching walking_group_recovery')
-            return
-
-        file_set = self.mc.get_set(object_id)
-
-        if len(file_set) == 0:
-            rospy.logwarn('No audio files in walking group recovery media set')
-            return
-
-        if not exists(self.audio_folder):
-            makedirs(self.audio_folder)
-
-        for f in file_set:
-            file = self.mc.get_media(str(f[2]))
-            outfile = open(join(self.audio_folder, f[0]), 'wb')
-            filestr = file.read()
-            outfile.write(filestr)
-            outfile.close()
-
-        self.file_list = [join(self.audio_folder, f[0]) for f in file_set]
-
+        self.sound_player_server = rospy.ServiceProxy(self.sound_player_name, PlaySoundService)
 
     def help_offered_cb(self, req):
         self.being_helped=True
@@ -101,10 +68,6 @@ class WalkingGroupRecovery(RecoverState):
             self.ask_help_srv(self.service_msg)
         except rospy.ServiceException, e:
             rospy.logwarn("No means of asking for human help available.")
-
-    def get_random_song(self):
-        pos = randint(0, len(self.file_list)-1)
-        return self.file_list[pos]
 
     def active_execute(self, userdata):
         wait_for_nav_help_timeout=rospy.get_param('wait_for_nav_help_timeout',40)
@@ -129,9 +92,9 @@ class WalkingGroupRecovery(RecoverState):
         #paths = roslib.packages.find_resource('walking_group_recovery', 'good_bad_ugly.mp3')
         #pygame.mixer.music.load(paths[0])
         #pygame.mixer.music.play()
-        if self.file_list is not None and len(self.file_list) > 0:
-            self.player = PyGamePlayer(self.min_volume, self.max_volume, self.audio_priority, frequency=44100)
-            self.player.play_music(self.get_random_song(), blocking=False)
+        req = PlaySoundServiceRequest(self.music_file)
+        resp = self.sound_player_server(req)
+        print ("Played sound: " + str(resp.file_found) + " with priority " + str(resp.audio_priority))
         if self.being_helped:
             self.service_msg.interaction_status=AskHelpRequest.BEING_HELPED
             self.service_msg.interaction_service=self.help_finished_service_name
@@ -159,7 +122,7 @@ class WalkingGroupRecovery(RecoverState):
 
 
     def finish_execution(self):
-        pygame.mixer.music.stop()
+        #pygame.mixer.music.stop()
         self.enable_motors(True)
         self.service_msg.interaction_status=AskHelpRequest.HELP_FINISHED
         self.service_msg.interaction_service='none'
