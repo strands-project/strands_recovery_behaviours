@@ -89,7 +89,7 @@ class BumperHelp(RecoverState):
             max_recovery_attempts=rospy.get_param("/monitored_navigation/"+self.name, (True, float("inf")))[1]
             if self.n_tries>max_recovery_attempts:
                 self.finish_execution()
-                if self.being_helped or self.help_finished:                   
+                if self.was_helped:                   
                     return "not_recovered_with_help"
                 else:
                     return "not_recovered_without_help"
@@ -136,7 +136,7 @@ class BumperHelp(RecoverState):
         self.service_msg.interaction_service='none'
         self.ask_help()        
         self.finish_execution()
-        if self.being_helped or self.help_finished:
+        if self.was_helped:
             return "recovered_with_help"
         else:
             return "recovered_without_help"
