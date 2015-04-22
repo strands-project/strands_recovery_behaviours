@@ -2,8 +2,8 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.14 (2015-04-22)
+-------------------
 * fixing bumper recover report on whether help was offered
 * Contributors: Bruno Lacerda
 

@@ -2,8 +2,8 @@
 Changelog for package walking_group_recovery
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.14 (2015-04-22)
+-------------------
 * Fixed a few bugs, tested that it's working now
 * Added dependency on sound_player_server
 * Changed to play sounds of walking group recovery with external player to enable running monitored_nav on separate computer
