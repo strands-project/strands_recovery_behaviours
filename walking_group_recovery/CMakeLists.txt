@@ -39,3 +39,7 @@ install(PROGRAMS
 #    src/walking_group_recovery/walking_group_nav_states.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
+install(DIRECTORY launch
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
