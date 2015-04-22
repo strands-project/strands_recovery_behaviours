@@ -2,6 +2,14 @@
 Changelog for package walking_group_recovery
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed a few bugs, tested that it's working now
+* Added dependency on sound_player_server
+* Changed to play sounds of walking group recovery with external player to enable running monitored_nav on separate computer
+* Just added a small printout to show that walking recovery is registered
+* Contributors: Nils Bore
+
 0.0.13 (2015-04-10)
 -------------------
 * Using parameters to set audio priorities and volumes in walking group recovery

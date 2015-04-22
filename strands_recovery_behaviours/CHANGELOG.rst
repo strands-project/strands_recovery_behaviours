@@ -2,6 +2,9 @@
 Changelog for package strands_recovery_behaviours
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.13 (2015-04-10)
 -------------------
 
