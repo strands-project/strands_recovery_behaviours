@@ -2,6 +2,11 @@
 Changelog for package walking_group_recovery
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Forgot to install the launch file, added now
+* Contributors: Nils Bore
+
 0.0.14 (2015-04-22)
 -------------------
 * Fixed a few bugs, tested that it's working now
