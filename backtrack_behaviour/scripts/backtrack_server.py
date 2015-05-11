@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import rospy
 
@@ -53,7 +54,7 @@ class BacktrackServer(object):
         rospy.loginfo("Backtrack behaviour got marytts action")
         self.speech = "I am stuck here, so I might try moving backwards. Please get out of the way."
         if self.deployment_language == "german":
-            self.speech = "Ich habe mich ein wenig verfahren und werde eventuell versuchen rückwärts zu fahren. Ich würde dich daher bitten etwas Platz zu machen."
+            self.speech = "Ich habe mich ein wenig verfahren und werde eventuell versuchen rückwärts zu fahren. Ich würde dich daher bitten, etwas Platz zu machen."
 
         # set correct parameters and announce server
         self.global_plan = None

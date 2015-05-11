@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import rospy
 
@@ -28,7 +29,7 @@ class HelpSpeech(UIHelper):
             self.nav_help_speech='Ich habe Probleme weiterzufahren. Bitte folge diesen Anweisungen um mir zu helfen.'
             self.bumper_help_speech='Ich bin in ein Hindernis gefahren. Bitte folge diesen Anweisungen um mir zu helfen.'
             self.magnetic_help_speech="Ich befinde mich zu nahe an den Stiegen und habe Angst weiterzufahren. Bitte benachrichtige meine Betreuer."
-            self.help_failed_speech='Ich habe leider noch immer Problem weiterzufahren. Befinde ich mich wirklich in einer freien Umgebung ohne Hindernisse?'
+            self.help_failed_speech='Ich habe leider noch immer Problem, weiterzufahren. Befinde ich mich wirklich in einer freien Umgebung ohne Hindernisse?'
             self.help_finished_speech='Danke! Ich mache mich wieder auf den Weg.'
         else:
             self.nav_help_speech='I am having problems moving. Please check my screen for instructions on how to help me.'
