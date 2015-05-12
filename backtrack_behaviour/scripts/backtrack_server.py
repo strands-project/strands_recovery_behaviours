@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import rospy
 
@@ -21,6 +22,7 @@ class BacktrackServer(object):
     def __init__(self):
         rospy.init_node('backtrack_actionserver')
         self.consider_moving_success = True
+        self.deployment_language = rospy.get_param("/deployment_language", "english")
 
         # get ptu action client
         self.ptu_action_client = actionlib.SimpleActionClient('/SetPTUState', PtuGotoAction)
@@ -51,6 +53,8 @@ class BacktrackServer(object):
 
         rospy.loginfo("Backtrack behaviour got marytts action")
         self.speech = "I am stuck here, so I might try moving backwards. Please get out of the way."
+        if self.deployment_language == "german":
+            self.speech = "Ich habe mich ein wenig verfahren und werde eventuell versuchen rückwärts zu fahren. Ich würde dich daher bitten, etwas Platz zu machen."
 
         # set correct parameters and announce server
         self.global_plan = None
