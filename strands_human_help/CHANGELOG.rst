@@ -2,6 +2,12 @@
 Changelog for package strands_human_help
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Changed to utf8 character encoding and added commas
+* Added localization for backtracking and help screens and speech
+* Contributors: Nils Bore
+
 0.0.15 (2015-04-28)
 -------------------
 
