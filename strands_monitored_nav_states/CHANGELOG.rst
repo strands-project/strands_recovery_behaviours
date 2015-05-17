@@ -2,6 +2,11 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added a parameter for the duration before resetting bumper if released without help
+* Contributors: Nils Bore
+
 0.0.16 (2015-05-13)
 -------------------
 

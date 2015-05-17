@@ -2,6 +2,9 @@
 Changelog for package strands_human_help
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.16 (2015-05-13)
 -------------------
 * Changed to utf8 character encoding and added commas
