@@ -6,7 +6,7 @@ from geometry_msgs.msg import Twist
 
 class RecoverStuckOnCarpetNoHelp(RecoverStateMachine):
     def __init__(self,max_recovery_attempts=float("inf")):
-        RecoverStateMachine.__init__(self)
+        RecoverStateMachine.__init__(self,input_keys=['n_fails'],output_keys=['n_fails'])
         self.state=CarpetState(max_recovery_attempts=max_recovery_attempts)
         
         with self:

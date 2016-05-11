@@ -13,6 +13,8 @@ class CarpetState(RecoverState):
                         name=name,
                         outcomes=['recovered_with_help', 'recovered_without_help','not_recovered_with_help', 'not_recovered_without_help', 'preempted'],
                         is_active=is_active,
+                        input_keys=['n_fails'],
+                        output_keys=['n_fails'],
                         max_recovery_attempts=max_recovery_attempts
                         )
         self.was_helped=False
@@ -26,7 +28,12 @@ class CarpetState(RecoverState):
         if self.preempt_requested(): 
             self.service_preempt()
             return 'preempted'
-            
+        
+        current_time=rospy.Time.now()
+        if current_time-self.last_call < rospy.Duration(60):
+            userdata.n_fails+=1
+        self.last_call=current_time
+        
         #small forward vel to unstuck robot
         self.vel_cmd.linear.x=0.8
         self.vel_cmd.angular.z=0.4
