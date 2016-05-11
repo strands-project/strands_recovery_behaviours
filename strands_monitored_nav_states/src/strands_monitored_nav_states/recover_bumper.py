@@ -87,7 +87,7 @@ class BumperHelp(RecoverState):
             return 'preempted'
         self.service_msg.n_fails=self.n_tries
         while self.bumper_pressed:
-            max_recovery_attempts=rospy.get_param("/monitored_navigation/"+self.name, (True, float("inf")))[1]
+            max_recovery_attempts=rospy.get_param("/monitored_navigation/recover_states/"+self.name, (True, float("inf")))[1]
             if self.n_tries>max_recovery_attempts:
                 self.finish_execution()
                 if self.was_helped:
