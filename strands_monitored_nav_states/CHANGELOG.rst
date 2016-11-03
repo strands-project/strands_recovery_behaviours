@@ -2,6 +2,12 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* correcting max recovery param name for bumper
+* remove empty file
+* Contributors: Bruno Lacerda
+
 0.0.17 (2015-05-17)
 -------------------
 * Added a parameter for the duration before resetting bumper if released without help
