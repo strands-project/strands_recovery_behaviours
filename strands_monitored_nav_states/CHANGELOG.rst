@@ -2,8 +2,8 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.18 (2016-11-03)
+-------------------
 * correcting max recovery param name for bumper
 * remove empty file
 * Contributors: Bruno Lacerda
