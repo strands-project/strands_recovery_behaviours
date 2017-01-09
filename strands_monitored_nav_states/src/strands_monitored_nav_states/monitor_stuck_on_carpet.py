@@ -23,7 +23,7 @@ class MonitorStuckOnCarpet(MonitorState):
         self.pub_msg=Bool(False)
         
         
-        MonitorState.__init__(self, "/monitored_navigation/stuck_on_carpet", Bool,self.monitor_cb)
+        MonitorState.__init__(self, "/monitored_navigation/stuck_on_carpet", Bool,self.monitor_cb, input_keys=['n_fails'], output_keys=['n_fails'])
         
 
 
@@ -45,6 +45,8 @@ class MonitorStuckOnCarpet(MonitorState):
 
     """ Test the message and decide exit or not """
     def monitor_cb(self,  ud,  msg):
+        if msg.data:
+            ud.n_fails+=1
         return not msg.data
 
 
