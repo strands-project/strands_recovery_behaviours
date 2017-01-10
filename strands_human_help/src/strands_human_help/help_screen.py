@@ -12,7 +12,7 @@ from strands_webserver.msg import ModalDialogSrvAction, ModalDialogSrvGoal
 class HelpScreen(UIHelper):
 
     def __init__(self):
-
+        
         self.deployment_language = rospy.get_param("/deployment_language", "english")
    
         self.screen = SimpleActionClient('strands_webserver/modal_dialog', ModalDialogSrvAction)
@@ -71,7 +71,7 @@ class HelpScreen(UIHelper):
         self.remove_help_content()
 
     def help_failed(self, failed_component, interaction_service, n_fails):
-        self.ask_help(failed_component, interaction_service, n_fails)
+        self.remove_help_content()
         
     def remove_help_content(self):
         self.screen.cancel_all_goals()
@@ -96,7 +96,6 @@ class HelpScreen(UIHelper):
         result = self.screen.get_result()
         if result.button == label:
             interaction_success()
-            
         
 
        
