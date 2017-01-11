@@ -2,6 +2,9 @@
 Changelog for package walking_group_recovery
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.18 (2016-11-03)
 -------------------
 
