@@ -2,8 +2,8 @@
 Changelog for package strands_recovery_behaviours
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.19 (2017-01-11)
+-------------------
 * also backtrack and ask for helop when stuck on carpet happens for a long time
 * Contributors: Bruno Lacerda
 

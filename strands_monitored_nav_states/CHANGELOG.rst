@@ -2,8 +2,8 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.19 (2017-01-11)
+-------------------
 * small bug fix
 * also backtrack and ask for helop when stuck on carpet happens for a long time
 * stand alone file for recover carpet state

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>backoff_behaviour</name>
-  <version>0.0.18</version>
+  <version>0.0.19</version>
   <description>Recovery behaviour that allows to aleviate mover_base mistakes.</description>
 
   <maintainer email="tkrajnik@lincoln.ac.uk">gestom</maintainer>
