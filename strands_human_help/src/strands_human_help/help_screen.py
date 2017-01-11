@@ -2,36 +2,29 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-import roslib
+from std_srvs.srv import Empty
+from actionlib import SimpleActionClient
 
 from monitored_navigation.ui_helper import UIHelper
-
-import strands_webserver.client_utils
-import strands_webserver.page_utils
+from strands_webserver.msg import ModalDialogSrvAction, ModalDialogSrvGoal
 
 
 class HelpScreen(UIHelper):
 
-    def __init__(self, webserver_srv_prefix='strands_webserver', service_prefix='/monitored_navigation', set_http_root=False):
-
+    def __init__(self):
+        
         self.deployment_language = rospy.get_param("/deployment_language", "english")
-
-        got_service=False
-        while not got_service:
-            try:
-                rospy.wait_for_service(webserver_srv_prefix + '/display_page', 1)
-                rospy.wait_for_service(webserver_srv_prefix + '/get_hostname',1)
-                got_service=True
-            except rospy.ROSException,e:
-                rospy.loginfo("help via screen is waiting for webserver services...")
+   
+        self.screen = SimpleActionClient('strands_webserver/modal_dialog', ModalDialogSrvAction)
+        got_server=self.screen.wait_for_server(rospy.Duration(1))
+        while not got_server:
+            rospy.loginfo("help via screen is waiting for webserver modal dialog action...")
+            got_server=self.screen.wait_for_server(rospy.Duration(1))
             if rospy.is_shutdown():
-                return
+                return        
 
-        rospy.loginfo("help via screen got webserver services")
-        self.display_no = rospy.get_param("~display", 0)
-        if set_http_root:
-            strands_webserver.client_utils.set_http_root(roslib.packages.get_pkg_dir('strands_human_help/html'))
-        self.display_main_page()
+        rospy.loginfo("help via screen got webserver modal dialog action")
+        
 
         if self.deployment_language == "german":
             self.help_label='RETTE MICH'
@@ -58,7 +51,6 @@ class HelpScreen(UIHelper):
             self.help_instructions_html += '<li>Press the '+ self.finish_label +' button below</li>'
             self.help_instructions_html += '</ol>'
 
-        self.service_prefix=service_prefix
         UIHelper.__init__(self)
 
         rospy.loginfo("help via screen initialized")
@@ -76,19 +68,34 @@ class HelpScreen(UIHelper):
         self.generate_help_content(self.finish_label, self.help_instructions_html,  interaction_service)
 
     def help_finished(self, failed_component, interaction_service, n_fails):
-        self.display_main_page()
+        self.remove_help_content()
 
     def help_failed(self, failed_component, interaction_service, n_fails):
-        self.ask_help(failed_component, interaction_service, n_fails)
+        self.remove_help_content()
+        
+    def remove_help_content(self):
+        self.screen.cancel_all_goals()
 
 
-    def display_main_page(self,):
-        strands_webserver.client_utils.display_relative_page(self.display_no, 'index.html')
-
-    def generate_help_content(self,label, html, interaction_service):
+    def generate_help_content(self, label, html, interaction_service):
+        interaction_success = rospy.ServiceProxy("/monitored_navigation/" + interaction_service, Empty)
         if label is None:
-            content=self.magnetic_stip_help_html
+            goal = ModalDialogSrvGoal(title = "Please help",
+                                  text = html,
+                                  buttons = [],
+                                  buttons_class = []
+                                  )
         else:
-            buttons = [(label, interaction_service)]
-            content = strands_webserver.page_utils.generate_alert_button_page(html, buttons, self.service_prefix)
-        strands_webserver.client_utils.display_content(self.display_no, content)
+            goal = ModalDialogSrvGoal(title = "Please help",
+                                  text = html,
+                                  buttons = [label],
+                                  buttons_class = ['btn-success']
+                                  )
+        self.screen.send_goal(goal)
+        self.screen.wait_for_result()
+        result = self.screen.get_result()
+        if result.button == label:
+            interaction_success()
+        
+
+       

@@ -129,6 +129,7 @@ class BumperHelp(RecoverState):
             self.service_msg.interaction_status=AskHelpRequest.HELP_FAILED
             self.service_msg.interaction_service=self.help_offered_service_name
             self.ask_help()
+            rospy.sleep(0.5)
         return self.recover_succeeded()
 
 
