@@ -43,7 +43,7 @@ class HelpScreen(UIHelper):
             self.finish_label='OK'
             self.bumper_help_html='Help! My bumper is stuck against something. If you can help me, please press the button below.'
             self.nav_help_html='Help! I appear to have trouble moving past an obstruction. If you can help me, please press the button below.'
-            self.magnetic_stip_help_html='I feel very unconfortable about moving in this area, please call one of my handlers.'
+            self.magnetic_stip_help_html='I feel very uncomfortable about moving in this area, please call one of my handlers.'
             self.help_instructions_html='Thank you! Please follow these instructions:'
             self.help_instructions_html += '<hr/>'
             self.help_instructions_html += '<ol>'
