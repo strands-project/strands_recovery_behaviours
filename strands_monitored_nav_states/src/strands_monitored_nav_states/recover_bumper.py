@@ -147,6 +147,8 @@ class BumperHelp(RecoverState):
         self.was_helped=self.being_helped or self.help_finished
         if not self.was_helped:
             rospy.sleep(self.wait_reset_bumper_duration)
+        self.reset_motorstop()
+        self.enable_motors(False)    
         self.enable_motors(True)
         self.reset_motorstop()
         self.being_helped=False
