@@ -31,3 +31,19 @@ class RecoverStuckOnCarpetBacktrackHelp(RecoverStateMachine):
                                                 'not_recovered_without_help':'not_recovered_without_help',
                                                 'not_active':'not_recovered_without_help',
                                                 'preempted':'preempted'})
+
+
+class RecoverStuckOnCarpetNoHelp(RecoverStateMachine):
+    def __init__(self,max_recovery_attempts=float("inf")):
+        RecoverStateMachine.__init__(self,input_keys=['n_fails'],output_keys=['n_fails'])
+        self.state=CarpetState(max_recovery_attempts=max_recovery_attempts)
+        
+        with self:
+            smach.StateMachine.add('CARPET_STATE',
+                                   self.state,
+                                   transitions={'preempted':'preempted',
+                                                'recovered_without_help':'recovered_without_help',
+                                                'preempted':'preempted',
+                                                'not_active':'not_recovered_without_help'})
+   
+

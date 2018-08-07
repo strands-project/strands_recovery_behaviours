@@ -32,3 +32,16 @@ class RecoverNav(RecoverStateMachine):
                                                 'preempted':'preempted'})
 
 
+class RecoverNavHelpOnly(RecoverStateMachine):
+    def __init__(self):
+        RecoverStateMachine.__init__(self,input_keys=['goal','n_fails'],output_keys=['goal','n_fails'])
+        self.nav_help=Help()
+        with self:
+            smach.StateMachine.add('NAV_HELP',
+                                   self.nav_help,
+                                   transitions={'recovered_with_help':'recovered_with_help', 
+                                                'recovered_without_help':'recovered_without_help',
+                                                'not_recovered_with_help':'not_recovered_with_help', 
+                                                'not_recovered_without_help':'not_recovered_without_help',
+                                                'not_active':'not_recovered_without_help',
+                                                'preempted':'preempted'})
