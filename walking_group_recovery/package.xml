@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>walking_group_recovery</name>
-  <version>0.0.19</version>
+  <version>0.1.0</version>
   <description>The AAF walking group monitored navigation recovery package</description>
 
   <maintainer email="nilsbore@gmail.com">Nils Bore</maintainer>

@@ -2,8 +2,8 @@
 Changelog for package strands_recovery_behaviours
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.0 (2018-10-30)
+------------------
 * tidying
 * Contributors: Bruno Lacerda
 
