@@ -2,6 +2,14 @@
 Changelog for package strands_monitored_nav_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* tidying
+* Merge pull request `#59 <https://github.com/strands-project/strands_recovery_behaviours/issues/59>`_ from bfalacerda/hydro-devel
+  christian's magic sequence for restarting motors
+* christian's magic sequence for restarting motors
+* Contributors: Bruno Lacerda, Nick Hawes
+
 0.0.19 (2017-01-11)
 -------------------
 * small bug fix
